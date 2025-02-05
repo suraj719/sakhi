@@ -21,13 +21,6 @@ export default function Home() {
       setLoading(false);
     }
   }
-  async function fetchUsers() {
-    const response = await getUser();
-    console.log(response);
-  }
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   return (
     <div>
@@ -46,6 +39,7 @@ export default function Home() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit">{loading ? "Adding user" : "Add User"}</button>
+        <h1 className="text-3xl font-bold underline">Hello world!</h1>
       </form>
     </div>
   );
