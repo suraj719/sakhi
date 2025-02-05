@@ -2,47 +2,15 @@
 import Image from "next/image";
 import { addUser, getUser } from "../../actions/userActions";
 import { useState, useEffect } from "react";
-
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 export default function Home() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function createUser(e) {
-    setLoading(true);
-    e.preventDefault();
-    try {
-      const response = await addUser({ username, email, password });
-      if (response.success) console.log(response.user);
-    } catch (err) {
-      console.log(response.error);
-    } finally {
-      setLoading(false);
+  const router = useRouter();
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      toast.error("Login to explore app");
+      router.push("/login");
     }
-  }
-
-  return (
-    <div>
-      <form onSubmit={createUser}>
-        <input
-          placeholder="Enter username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          placeholder="Enter email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          placeholder="Enter password"
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">{loading ? "Adding user" : "Add User"}</button>
-        <h1 className="text-3xl text-blue-600 font-bold underline">
-          Hello world!
-        </h1>
-      </form>
-    </div>
-  );
+  }, []);
+  return <div>Hello World</div>;
 }

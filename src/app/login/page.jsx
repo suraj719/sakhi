@@ -4,17 +4,23 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { User, Mail, Phone, Lock } from "lucide-react";
-import { addUser } from "../../../actions/userActions";
+import { loginUser } from "../../../actions/userActions";
 import { useRouter } from "next/navigation";
 
-export default function SignupForm() {
+export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    phoneNo: "",
+    slug: "",
     password: "",
+    type: "username",
   });
   const router = useRouter();
 
@@ -23,11 +29,11 @@ export default function SignupForm() {
     setIsLoading(true);
 
     try {
-      const result = await addUser(formData);
+      const result = await loginUser(formData);
 
       if (result.success) {
         toast.success(
-          `Account created successfully! Welcome ${result.user.username}`
+          `Logged in successfully! Welcome ${result.user.username}`
         );
         localStorage.setItem("token", result.token);
         router.push("/");
@@ -48,50 +54,80 @@ export default function SignupForm() {
     }));
   };
 
+  const handleTypeChange = (value) => {
+    setFormData((prev) => ({
+      ...prev,
+      type: value,
+    }));
+  };
+
+  const getInputIcon = () => {
+    switch (formData.type) {
+      case "email":
+        return (
+          <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
+        );
+      case "phoneNo":
+        return (
+          <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
+        );
+      default:
+        return (
+          <User className="absolute left-3 top-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
+        );
+    }
+  };
+
+  const getInputPlaceholder = () => {
+    switch (formData.type) {
+      case "email":
+        return "Email";
+      case "phoneNo":
+        return "Phone Number";
+      default:
+        return "Username";
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-white/5 backdrop-blur-sm rounded-xl border border-gray-300 dark:border-white/10 shadow-lg">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Create Account
+            Login
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Sign up to get started
+            Sign in to continue
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-4">
+            <Select
+              onValueChange={handleTypeChange}
+              defaultValue={formData.type}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select login type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="username">Username</SelectItem>
+                <SelectItem value="email">Email</SelectItem>
+                <SelectItem value="phoneNo">Phone Number</SelectItem>
+              </SelectContent>
+            </Select>
             <div className="relative">
-              <User className="absolute left-3 top-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
+              {getInputIcon()}
               <Input
-                type="text"
-                name="username"
-                placeholder="Username"
-                value={formData.username}
-                onChange={handleChange}
-                className="pl-10 bg-white dark:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
-                required
-              />
-            </div>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
-              <Input
-                type="email"
-                name="email"
-                placeholder="Email address"
-                value={formData.email}
-                onChange={handleChange}
-                className="pl-10 bg-white dark:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
-                required
-              />
-            </div>
-            <div className="relative">
-              <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
-              <Input
-                type="tel"
-                name="phoneNo"
-                placeholder="Phone number"
-                value={formData.phoneNo}
+                type={
+                  formData.type === "phoneNo"
+                    ? "tel"
+                    : formData.type === "email"
+                    ? "email"
+                    : "text"
+                }
+                name="slug"
+                placeholder={getInputPlaceholder()}
+                value={formData.slug}
                 onChange={handleChange}
                 className="pl-10 bg-white dark:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 required
@@ -115,15 +151,15 @@ export default function SignupForm() {
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md"
             disabled={isLoading}
           >
-            {isLoading ? "Creating account..." : "Sign up"}
+            {isLoading ? "Logging in..." : "Sign in"}
           </Button>
         </form>
         <div className="text-center text-sm">
           <span className="text-gray-600 dark:text-gray-400">
-            Already have an account?
+            Don't have an account?
           </span>{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
-            Log in
+          <a href="/signup" className="text-blue-600 hover:underline">
+            Sign up
           </a>
         </div>
       </div>
