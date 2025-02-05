@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const travelSchema = new mongoose.Schema({
   source: {
     type: String,
@@ -9,7 +10,7 @@ const travelSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: Date,
+    type: String,
     required: true,
   },
   time: {
@@ -38,6 +39,7 @@ const travelSchema = new mongoose.Schema({
     ref: "User",
   },
   status: {
+    type: String,
     enum: ["open", "closed"],
     default: "open",
   },
@@ -55,5 +57,8 @@ const travelSchema = new mongoose.Schema({
     },
   ],
 });
-const Travel = mongoose.models.Travel || mongoose.model("Travel", userSchema);
+
+const Travel =
+  mongoose.models?.Travel || mongoose.model("Travel", travelSchema);
+
 export default Travel;

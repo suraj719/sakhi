@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { createTravel } from "../../../actions/travelActions";
+import { toast } from "sonner";
 export default function TourDialog() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,8 +42,18 @@ export default function TourDialog() {
 
   const closeDialog = () => setIsOpen(false);
 
-  const handleSubmit = () => {
-    console.log(tourForm);
+  const handleSubmit = async () => {
+    const response = await createTravel(
+      tourForm,
+      localStorage.getItem("token")
+    );
+    if (response.success) {
+      toast.success("Trip created successfully");
+      closeDialog();
+    } else {
+      toast.error(response.error);
+      console.log(response.error);
+    }
   };
 
   const handleChange = (e) => {

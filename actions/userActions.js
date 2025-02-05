@@ -135,3 +135,12 @@ export async function loginUser({ type, slug, password }) {
     return { success: false, error: err.message };
   }
 }
+export async function getUsers() {
+  try {
+    await dbConnect();
+    const users = await User.find().select("-password");
+    return { success: true, users };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
