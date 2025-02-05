@@ -6,42 +6,42 @@ The Women Safety App is an innovative solution designed to enhance security and 
 
 ### 🚀 Safety Tools & Assistance
 #### 🔍 Travel Buddy
-[] Real-time route tracking and updates to trusted contacts.
+* [ ] Real-time route tracking and updates to trusted contacts.
 
 #### 🏠 Secure Places Marking
-[] Users can mark and rate locations based on security levels, aiding informed decision-making.
+* [ ] Users can mark and rate locations based on security levels, aiding informed decision-making.
 
 #### 👥 Community Forums
-[] A platform for women to share experiences, seek advice, and build a support network.
+* [ ] A platform for women to share experiences, seek advice, and build a support network.
 
 #### ⚖️ Legal Aid Chatbot
-[] Provides instant legal advice and safety resources tailored to women’s rights.
+* [ ] Provides instant legal advice and safety resources tailored to women’s rights.
 
 #### 📷 Spycam Detector
-[] Detects hidden surveillance devices, ensuring privacy in public or rented spaces.
+* [ ] Detects hidden surveillance devices, ensuring privacy in public or rented spaces.
 
 ### 🆘 Additional Safety Features
 #### 📍 Geofencing Alerts
-[] Sends notifications when a family member enters or exits predefined safe zones.
+* [ ] Sends notifications when a family member enters or exits predefined safe zones.
 
 #### 🚖 Taxi Safety
-[] Sends vehicle details and license plates to SOS contacts and authorities for live tracking.
+* [ ] Sends vehicle details and license plates to SOS contacts and authorities for live tracking.
 
 #### 🚨 Emergency SOS Alerts
-[] Triggered by shaking the device, voice commands, or button presses.
-[] Sends alerts, live location, and audio/video recordings to trusted contacts and authorities.
+* [ ] Triggered by shaking the device, voice commands, or button presses.
+* [ ] Sends alerts, live location, and audio/video recordings to trusted contacts and authorities.
 
 #### 📞 Fake Calls
-[] Simulates incoming calls with pre-recorded messages to help users escape uncomfortable situations.
+* [ ] Simulates incoming calls with pre-recorded messages to help users escape uncomfortable situations.
 
 #### 🏢 NGO Connectivity
-[] Links users to organizations offering legal aid, mental health support, and other assistance.
+* [ ] Links users to organizations offering legal aid, mental health support, and other assistance.
 
 #### 🎓 Scholarship & Opportunity Portal
-[] Curates educational and professional growth resources specifically for women.
+* [ ] Curates educational and professional growth resources specifically for women.
 
 #### 🔴 One-Touch Safety Mode
-[] Activates a suite of security measures, including live recording, location sharing, and alerts to trusted contacts.
+* [ ] Activates a suite of security measures, including live recording, location sharing, and alerts to trusted contacts.
 
 ## 🌍 Alignment with UN Sustainable Development Goals (SDGs)
 
