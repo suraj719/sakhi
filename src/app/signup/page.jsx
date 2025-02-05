@@ -101,8 +101,7 @@ export default function SignupForm() {
         <Button
           type="submit"
           className="w-full bg-instagram-blue hover:bg-blue-600 text-white"
-          disabled={isLoading}
-        >
+          disabled={isLoading}>
           {isLoading ? "Creating account..." : "Sign up"}
         </Button>
       </form>
