@@ -51,7 +51,7 @@ export async function addUser({ username, password, email, phoneNo }) {
     const token = jwt.sign(
       { user: user._id.toString() },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" }
     );
 
     return {
@@ -68,5 +68,70 @@ export async function addUser({ username, password, email, phoneNo }) {
       success: false,
       error: err.message,
     };
+  }
+}
+export async function loginUser({ type, slug, password }) {
+  try {
+    await dbConnect();
+    if (type === "email") {
+      const user = await User.findOne({ email: slug });
+      if (!user) return { success: false, error: "User not found" };
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return { success: false, error: "Invalid credentials" };
+      const token = jwt.sign(
+        { user: user._id.toString() },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+      return {
+        success: true,
+        user: {
+          _id: user._id.toString(),
+          username: user.username,
+          email: user.email,
+        },
+        token,
+      };
+    } else if (type === "phoneNo") {
+      const user = await User.findOne({ phoneNo: slug });
+      if (!user) return { success: false, error: "User not found" };
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return { success: false, error: "Invalid credentials" };
+      const token = jwt.sign(
+        { user: user._id.toString() },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+      return {
+        success: true,
+        user: {
+          _id: user._id.toString(),
+          username: user.username,
+          email: user.email,
+        },
+        token,
+      };
+    } else {
+      const user = await User.findOne({ username: slug });
+      if (!user) return { success: false, error: "User not found" };
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return { success: false, error: "Invalid credentials" };
+      const token = jwt.sign(
+        { user: user._id.toString() },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+      return {
+        success: true,
+        user: {
+          _id: user._id.toString(),
+          username: user.username,
+          email: user.email,
+        },
+        token,
+      };
+    }
+  } catch (err) {
+    return { success: false, error: err.message };
   }
 }
