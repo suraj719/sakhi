@@ -50,7 +50,7 @@ export async function addUser({ username, password, email, phoneNo }) {
 
     const token = jwt.sign(
       { user: user._id.toString() },
-      process.env.JWT_SECRET,
+      process.env.NEXT_PUBLIC_JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -80,7 +80,7 @@ export async function loginUser({ type, slug, password }) {
       if (!isMatch) return { success: false, error: "Invalid credentials" };
       const token = jwt.sign(
         { user: user._id.toString() },
-        process.env.JWT_SECRET,
+        process.env.NEXT_PUBLIC_JWT_SECRET,
         { expiresIn: "7d" }
       );
       return {
@@ -99,7 +99,7 @@ export async function loginUser({ type, slug, password }) {
       if (!isMatch) return { success: false, error: "Invalid credentials" };
       const token = jwt.sign(
         { user: user._id.toString() },
-        process.env.JWT_SECRET,
+        process.env.NEXT_PUBLIC_JWT_SECRET,
         { expiresIn: "7d" }
       );
       return {
@@ -118,7 +118,7 @@ export async function loginUser({ type, slug, password }) {
       if (!isMatch) return { success: false, error: "Invalid credentials" };
       const token = jwt.sign(
         { user: user._id.toString() },
-        process.env.JWT_SECRET,
+        process.env.NEXT_PUBLIC_JWT_SECRET,
         { expiresIn: "7d" }
       );
       return {
