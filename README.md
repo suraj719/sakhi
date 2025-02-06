@@ -6,7 +6,7 @@ The Women Safety App is an innovative solution designed to enhance security and 
 
 ### 🚀 Safety Tools & Assistance
 #### 🔍 Travel Buddy
-* [ ] Real-time route tracking and updates to trusted contacts.
+* [X] Finding someone safe to travel with and bridge those communication gaps with chat rooms
 
 #### 🏠 Secure Places Marking
 * [ ] Users can mark and rate locations based on security levels, aiding informed decision-making.
