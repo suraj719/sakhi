@@ -11,8 +11,8 @@ import { IoLogoWechat } from "react-icons/io5";
 
 function Navbar() {
   return (
-    <div className="navbar h-[100%] flex flex-colitems-center">
-      <div className="flex md:flex-col  justify-around items-center bg-[#dc2446] text-white p-2 w-full md:w-[75px] fixed bottom-0 left-0 md:relative md:bottom-auto md:top-0 md:pl-4 md:h-[90%]">
+    <div className="navbar h-[100%] ml-2  flex flex-col justify-center ">
+      <div className="flex md:flex-col md:rounded-lg shadow-black shadow-xl  justify-around items-center bg-[#dc2446] text-white p-2 w-full md:w-[75px] fixed bottom-0 left-0 md:relative md:bottom-auto md:top-0 md:pl-4 md:h-[90%]">
         <div className=" w-full flex-1 text-center md:text-left p-2 flex items-center  md:flex-row md:gap-4">
           <FaHome className="mx-auto  text-2xl" />
         </div>
