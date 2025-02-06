@@ -13,15 +13,19 @@ export async function createTravel(travelData, token) {
     const user = await User.findById(decoded.user);
 
     travel.creator = user._id;
+    const chatRoom = await MessageRoom.create({
+      title: `${travel.source}-${travel.destination}`,
+    });
+    chatRoom.participants.push(user._id);
+    travel.chatRoom = chatRoom._id;
+    user.messageRooms.push(chatRoom._id);
+    await chatRoom.save();
     await travel.save();
+    await user.save();
 
     return {
       success: true,
-      travel: {
-        ...travel.toObject(),
-        _id: travel._id.toString(),
-        creator: travel.creator.toString(),
-      },
+      message: "Travel created successfully!",
     };
   } catch (err) {
     return { success: false, error: err.message };
@@ -76,15 +80,6 @@ export async function createApplication(travelId, message, token) {
     return {
       success: true,
       message: "Application submitted! The creator will be notified.",
-      travel: {
-        ...travel.toObject(),
-        _id: travel._id.toString(),
-        creator: travel.creator.toString(),
-        applications: travel.applications.map((app) => ({
-          ...app,
-          applicant: app.applicant.toString(),
-        })),
-      },
     };
   } catch (err) {
     return { success: false, error: err.message };
@@ -92,7 +87,7 @@ export async function createApplication(travelId, message, token) {
 }
 export async function acceptApplication(travelId, applicationId) {
   try {
-    await dbConnect(); // Ensure DB connection
+    await dbConnect();
 
     const travel = await Travel.findById(travelId).populate(
       "applications.applicant"
@@ -107,21 +102,15 @@ export async function acceptApplication(travelId, applicationId) {
     application.set("status", "accepted");
     await travel.save();
 
-    const messageRoom = await MessageRoom.create({
-      participants: [travel.creator, application.applicant],
-      origin: travel._id.toString(),
-    });
+    const messageRoom = await MessageRoom.findById(travel.chatRoom);
+    if (!messageRoom.participants.includes(application.applicant)) {
+      messageRoom.participants.push(application.applicant);
+      const user = await User.findById(application.applicant);
+      user.messageRooms.push(messageRoom._id);
+      await user.save();
+    }
 
-    const creator = await User.findById(travel.creator);
-    const applicant = await User.findById(application.applicant);
-
-    if (!creator || !applicant) throw new Error("User not found");
-
-    creator.set("messageRooms", [...creator.messageRooms, messageRoom._id]);
-    applicant.set("messageRooms", [...applicant.messageRooms, messageRoom._id]);
-
-    await creator.save();
-    await applicant.save();
+    await messageRoom.save();
 
     return {
       success: true,

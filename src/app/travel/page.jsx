@@ -20,6 +20,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { getUser } from "../../../actions/userActions";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [travels, setTravels] = useState([]);
@@ -28,6 +29,7 @@ export default function Page() {
   const [applyDialog, setApplyDialog] = useState(false);
   const [viewApplicationDialog, setViewApplicationDialog] = useState(false);
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const fetchTravels = useCallback(async () => {
     const response = await getTravels();
@@ -198,39 +200,48 @@ export default function Page() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {selectedTravel?.applications.map((application) => (
-              <div
-                key={application._id}
-                className="border rounded-lg p-4 shadow-sm bg-gray-50"
-              >
-                <p className="text-gray-700">
-                  <strong className="text-gray-900">Applicant:</strong>{" "}
-                  {application.applicant.username}
-                </p>
-                <p className="text-gray-700">
-                  <strong className="text-gray-900">Application:</strong>{" "}
-                  {application.application}
-                </p>
-                <div className="mt-2 flex gap-2">
-                  {application.status === "pending" ? (
-                    <>
-                      <Button
-                        onClick={() => acceptApplicationStatus(application._id)}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        onClick={() => rejectApplicationStatus(application._id)}
-                      >
-                        Reject
-                      </Button>
-                    </>
-                  ) : (
-                    <Button>Chat</Button>
-                  )}
-                </div>
-              </div>
-            ))}
+            {selectedTravel?.applications.map(
+              (application) =>
+                application.status !== "rejected" && (
+                  <div
+                    key={application._id}
+                    className="border rounded-lg p-4 shadow-sm bg-gray-50"
+                  >
+                    <p className="text-gray-700">
+                      <strong className="text-gray-900">Applicant:</strong>{" "}
+                      {application.applicant.username}
+                    </p>
+                    <p className="text-gray-700">
+                      <strong className="text-gray-900">Application:</strong>{" "}
+                      {application.application}
+                    </p>
+                    <div className="mt-2 flex gap-2">
+                      {application.status === "pending" ? (
+                        <>
+                          <Button
+                            onClick={() =>
+                              acceptApplicationStatus(application._id)
+                            }
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            onClick={() =>
+                              rejectApplicationStatus(application._id)
+                            }
+                          >
+                            Reject
+                          </Button>
+                        </>
+                      ) : (
+                        <Button onClick={() => router.push("/chatrooms")}>
+                          Chat
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )
+            )}
           </div>
         </DialogContent>
       </Dialog>
