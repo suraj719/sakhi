@@ -17,6 +17,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  messageRooms: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "MessageRoom",
+    },
+  ],
 });
 
 const User = mongoose.models?.User || mongoose.model("User", userSchema);

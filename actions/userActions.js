@@ -4,6 +4,7 @@ import User from "../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
+import MessageRoom from "../models/messageRoom";
 
 const signupSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters long"),

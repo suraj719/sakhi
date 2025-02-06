@@ -8,7 +8,6 @@ import {
   acceptApplication,
   rejectApplication,
 } from "../../../actions/travelActions";
-
 import { toast } from "sonner";
 import { TravelCard } from "@/components/pages/travel/travel-card";
 import {
@@ -29,7 +28,6 @@ export default function Page() {
   const [applyDialog, setApplyDialog] = useState(false);
   const [viewApplicationDialog, setViewApplicationDialog] = useState(false);
   const [message, setMessage] = useState("");
-  const [application, setApplication] = useState([]);
 
   const fetchTravels = useCallback(async () => {
     const response = await getTravels();
@@ -50,22 +48,25 @@ export default function Page() {
   }, []);
 
   async function handleApplication() {
-    if (selectedTravel) {
-      const response = await createApplication(
-        selectedTravel._id,
-        message,
-        localStorage.getItem("token")
-      );
-      if (response.success) {
-        toast.success(response.message);
-        setApplyDialog(false);
-        setSelectedTravel(null);
-      } else {
-        toast.error(response.error);
-      }
+    if (!selectedTravel) return;
+
+    const response = await createApplication(
+      selectedTravel._id,
+      message,
+      localStorage.getItem("token")
+    );
+    if (response.success) {
+      toast.success(response.message);
+      setApplyDialog(false);
+      setSelectedTravel(null);
+    } else {
+      toast.error(response.error);
     }
   }
+
   async function acceptApplicationStatus(applicationId) {
+    if (!selectedTravel) return;
+
     const response = await acceptApplication(selectedTravel._id, applicationId);
     if (response.success) {
       toast.success(response.message);
@@ -77,6 +78,8 @@ export default function Page() {
   }
 
   async function rejectApplicationStatus(applicationId) {
+    if (!selectedTravel) return;
+
     const response = await rejectApplication(selectedTravel._id, applicationId);
     if (response.success) {
       toast.success(response.message);
@@ -100,7 +103,7 @@ export default function Page() {
           <TravelCard
             key={travel._id}
             travel={travel}
-            isOwner={user?._id === travel.creator}
+            isOwner={user?._id === travel.creator._id} // Fixes ownership check
             onApply={() => {
               setSelectedTravel(travel);
               setApplyDialog(true);
@@ -114,6 +117,7 @@ export default function Page() {
         ))}
       </div>
 
+      {/* Travel Details Dialog */}
       <Dialog
         open={!!selectedTravel && !applyDialog && !viewApplicationDialog}
         onOpenChange={(open) => {
@@ -158,16 +162,17 @@ export default function Page() {
         </DialogContent>
       </Dialog>
 
+      {/* Apply Dialog */}
       <Dialog
         open={applyDialog}
-        onOpenChange={(e) => {
+        onOpenChange={(open) => {
           setApplyDialog(false);
           setSelectedTravel(null);
         }}
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Apply as travel Buddy</DialogTitle>
+            <DialogTitle>Apply as Travel Buddy</DialogTitle>
           </DialogHeader>
           <Textarea
             placeholder="Enter your message to the travel buddy"
@@ -178,9 +183,13 @@ export default function Page() {
         </DialogContent>
       </Dialog>
 
+      {/* View Applications Dialog */}
       <Dialog
         open={viewApplicationDialog}
-        onOpenChange={setViewApplicationDialog}
+        onOpenChange={(open) => {
+          setViewApplicationDialog(open);
+          if (!open) setSelectedTravel(null);
+        }}
       >
         <DialogContent className="max-w-md p-6 rounded-lg shadow-lg">
           <DialogHeader>
@@ -189,54 +198,39 @@ export default function Page() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {selectedTravel?.applications.map(
-              (application) =>
-                application.applicant.username !== "pending" && (
-                  <div
-                    key={application._id}
-                    className="border rounded-lg p-4 shadow-sm bg-gray-50"
-                  >
-                    <p className="text-gray-700">
-                      <strong className="text-gray-900">Applicant:</strong>{" "}
-                      {application.applicant.username}
-                    </p>
-                    <p className="text-gray-700">
-                      <strong className="text-gray-900">Application:</strong>{" "}
-                      {application.application}
-                    </p>
-                    <button
-                      className={`mt-2 px-4 py-1 text-sm font-medium rounded-md ${
-                        application.status === "approved"
-                          ? "bg-green-500 text-white"
-                          : application.status === "rejected"
-                          ? "bg-red-500 text-white"
-                          : "bg-gray-300 text-gray-800"
-                      }`}
-                    >
-                      {application.status === "pending" ? (
-                        <div>
-                          <Button
-                            onClick={() =>
-                              acceptApplicationStatus(application._id)
-                            }
-                          >
-                            Accept
-                          </Button>
-                          <Button
-                            onClick={() =>
-                              rejectApplicationStatus(application._id)
-                            }
-                          >
-                            Reject
-                          </Button>
-                        </div>
-                      ) : (
-                        <Button>Chat</Button>
-                      )}
-                    </button>
-                  </div>
-                )
-            )}
+            {selectedTravel?.applications.map((application) => (
+              <div
+                key={application._id}
+                className="border rounded-lg p-4 shadow-sm bg-gray-50"
+              >
+                <p className="text-gray-700">
+                  <strong className="text-gray-900">Applicant:</strong>{" "}
+                  {application.applicant.username}
+                </p>
+                <p className="text-gray-700">
+                  <strong className="text-gray-900">Application:</strong>{" "}
+                  {application.application}
+                </p>
+                <div className="mt-2 flex gap-2">
+                  {application.status === "pending" ? (
+                    <>
+                      <Button
+                        onClick={() => acceptApplicationStatus(application._id)}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        onClick={() => rejectApplicationStatus(application._id)}
+                      >
+                        Reject
+                      </Button>
+                    </>
+                  ) : (
+                    <Button>Chat</Button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </DialogContent>
       </Dialog>

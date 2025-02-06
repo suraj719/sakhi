@@ -3,6 +3,7 @@ import Travel from "../models/travel";
 import User from "../models/user";
 import dbConnect from "../utils/dbConnect";
 import jwt from "jsonwebtoken";
+import MessageRoom from "../models/messageRoom";
 export async function createTravel(travelData, token) {
   try {
     await dbConnect();
@@ -30,15 +31,26 @@ export async function createTravel(travelData, token) {
 export async function getTravels() {
   try {
     await dbConnect();
-    const travels = await Travel.find().lean();
+    const travels = await Travel.find()
+      .populate("creator", "username")
+      .populate("applications.applicant", "username")
+      .lean();
 
     const formattedTravels = travels.map((travel) => ({
       ...travel,
       _id: travel._id.toString(),
-      creator: travel.creator?.toString(),
+      creator: {
+        _id: travel.creator?._id.toString(),
+        username: travel.creator?.username || "Unknown",
+      },
       applications: travel.applications.map((app) => ({
-        ...app,
-        applicant: app.applicant.toString(),
+        _id: app._id.toString(),
+        applicant: {
+          _id: app.applicant?._id.toString(),
+          username: app.applicant?.username || "Unknown",
+        },
+        application: app.application,
+        status: app.status,
       })),
     }));
 
@@ -80,8 +92,11 @@ export async function createApplication(travelId, message, token) {
 }
 export async function acceptApplication(travelId, applicationId) {
   try {
-    await dbConnect();
-    const travel = await Travel.findById(travelId);
+    await dbConnect(); // Ensure DB connection
+
+    const travel = await Travel.findById(travelId).populate(
+      "applications.applicant"
+    );
     if (!travel) throw new Error("Travel not found");
 
     const application = travel.applications.find(
@@ -89,8 +104,24 @@ export async function acceptApplication(travelId, applicationId) {
     );
     if (!application) throw new Error("Application not found");
 
-    application.status = "accepted";
+    application.set("status", "accepted");
     await travel.save();
+
+    const messageRoom = await MessageRoom.create({
+      participants: [travel.creator, application.applicant],
+      origin: travel._id.toString(),
+    });
+
+    const creator = await User.findById(travel.creator);
+    const applicant = await User.findById(application.applicant);
+
+    if (!creator || !applicant) throw new Error("User not found");
+
+    creator.set("messageRooms", [...creator.messageRooms, messageRoom._id]);
+    applicant.set("messageRooms", [...applicant.messageRooms, messageRoom._id]);
+
+    await creator.save();
+    await applicant.save();
 
     return {
       success: true,
