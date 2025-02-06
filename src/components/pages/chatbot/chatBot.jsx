@@ -8,20 +8,58 @@ function ChatBot() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationHistory, setConversationHistory] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isInitialResponse, setIsInitialResponse] = useState(true);
 
   const handleSendMessage = async () => {
     if (!input.trim()) {
-      toast.error("Please enter a question.");
+      toast.error("Please enter a message.");
       return;
     }
 
     setIsLoading(true);
 
-    setMessages((prev) => [...prev, { text: input, sender: "user" }]);
+    const userMessage = { text: input, sender: "user" };
+    setMessages((prev) => [...prev, userMessage]);
+
+    const updatedHistory = [
+      ...conversationHistory,
+      {
+        role: "user",
+        content: input,
+        timestamp: new Date().toISOString(),
+      },
+    ];
 
     try {
-      const response = await chatbot(input);
+      const response = await chatbot(
+        input,
+        updatedHistory,
+        isInitialResponse,
+        currentQuestionIndex
+      );
+
+      // Add bot's response to messages
       setMessages((prev) => [...prev, { text: response, sender: "bot" }]);
+
+      // Update conversation history with bot's response
+      setConversationHistory([
+        ...updatedHistory,
+        {
+          role: "assistant",
+          content: response,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+
+      // If this was the initial response, set it to false for subsequent messages
+      if (isInitialResponse) {
+        setIsInitialResponse(false);
+        setCurrentQuestionIndex(1); // Start with the first question
+      } else {
+        setCurrentQuestionIndex((prev) => prev + 1);
+      }
     } catch (error) {
       toast.error("Failed to fetch response. Please try again.");
     } finally {
@@ -36,7 +74,14 @@ function ChatBot() {
         <h1 className="text-lg font-semibold">Legal Advice Chatbot</h1>
       </div>
 
-      <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
+      <div
+        className="flex-1 p-4 overflow-y-auto bg-gray-50"
+        id="chat-container">
+        {messages.length === 0 && (
+          <div className="text-center text-gray-500 mt-4">
+            Hello! I'm your legal advice chatbot. How can I assist you today?
+          </div>
+        )}
         {messages.map((message, index) => (
           <div
             key={index}
@@ -105,7 +150,7 @@ function ChatBot() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your question..."
+            placeholder="Type your message..."
             className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSendMessage();
