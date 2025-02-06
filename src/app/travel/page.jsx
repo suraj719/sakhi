@@ -105,7 +105,7 @@ export default function Page() {
           <TravelCard
             key={travel._id}
             travel={travel}
-            isOwner={user?._id === travel.creator._id} // Fixes ownership check
+            isOwner={user?._id === travel.creator._id} 
             onApply={() => {
               setSelectedTravel(travel);
               setApplyDialog(true);
