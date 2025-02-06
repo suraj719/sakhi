@@ -135,11 +135,21 @@ export async function loginUser({ type, slug, password }) {
     return { success: false, error: err.message };
   }
 }
-export async function getUsers() {
+export async function getUser(token) {
   try {
     await dbConnect();
-    const users = await User.find().select("-password");
-    return { success: true, users };
+    const decoded = jwt.decode(token);
+    const user = await User.findById(decoded.user).lean();
+
+    if (!user) return { success: false, error: "User not found" };
+
+    return {
+      success: true,
+      user: {
+        ...user,
+        _id: user._id.toString(),
+      },
+    };
   } catch (err) {
     return { success: false, error: err.message };
   }
