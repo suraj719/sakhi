@@ -4,6 +4,11 @@ import MessageRoom from "../models/messageRoom";
 import User from "../models/user";
 import dbConnect from "../utils/dbConnect";
 
+// Helper function to convert Mongoose document to plain object
+function toPlainObject(doc) {
+  return doc ? JSON.parse(JSON.stringify(doc)) : null;
+}
+
 export async function fetchUserRooms(token) {
   try {
     await dbConnect();
@@ -11,26 +16,27 @@ export async function fetchUserRooms(token) {
     if (!decoded || !decoded.user) throw new Error("Invalid token");
 
     const userId = decoded.user;
-    const user = await User.findById(userId).populate("messageRooms");
+    const user = toPlainObject(
+      await User.findById(userId).populate("messageRooms")
+    );
     if (!user) throw new Error("User not found");
 
-    const rooms = await MessageRoom.find({ _id: { $in: user.messageRooms } })
-      .populate({
+    const rooms = toPlainObject(
+      await MessageRoom.find({ _id: { $in: user.messageRooms } }).populate({
         path: "participants",
-        select: "username",
+        select: "username _id",
       })
-      .lean();
+    );
 
-    const formattedRooms = rooms.map((room) => {
-      const otherParticipant = room.participants.find(
-        (participant) => participant._id.toString() !== userId
-      );
-
-      return {
-        roomId: room._id.toString(), // Convert ObjectId to string
-        otherParticipant: otherParticipant ? otherParticipant.username : null,
-      };
-    });
+    const formattedRooms = rooms.map((room) => ({
+      title: room.title,
+      participantCount: room.participants.length,
+      participants: room.participants.map((p) => ({
+        id: p._id.toString(),
+        username: p.username,
+      })),
+      roomId: room._id.toString(),
+    }));
 
     return formattedRooms;
   } catch (error) {
@@ -42,14 +48,14 @@ export async function fetchUserRooms(token) {
 export async function fetchMessages(roomId) {
   try {
     await dbConnect();
-    const room = await MessageRoom.findById(roomId)
-      .populate("messages.sender", "username")
-      .lean();
+    const room = toPlainObject(
+      await MessageRoom.findById(roomId).populate("messages.sender", "username")
+    );
 
     if (!room) throw new Error("Room not found");
 
     return room.messages.map((msg) => ({
-      sender: msg.sender._id.toString(), // Convert ObjectId to string
+      sender: msg.sender._id.toString(),
       username: msg.sender.username,
       message: msg.message,
       time: msg.time,
@@ -73,7 +79,7 @@ export async function sendMessage(roomId, message, token) {
     if (!room) throw new Error("Chat room not found");
 
     room.messages.push({
-      sender: user._id.toString(), // Convert ObjectId to string
+      sender: user._id.toString(),
       message: message,
       time: new Date().toISOString(),
     });
@@ -95,9 +101,9 @@ export async function sendMessage(roomId, message, token) {
 export async function getRoomDetails(roomId) {
   try {
     await dbConnect();
-    const room = await MessageRoom.findById(roomId)
-      .populate("participants", "username")
-      .lean();
+    const room = toPlainObject(
+      await MessageRoom.findById(roomId).populate("participants", "username")
+    );
 
     if (!room) throw new Error("Room not found");
 
@@ -109,7 +115,7 @@ export async function getRoomDetails(roomId) {
           id: p._id.toString(),
           username: p.username,
         })),
-        origin: room.origin.toString(),
+        title: room.title,
       },
     };
   } catch (err) {

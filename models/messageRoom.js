@@ -25,8 +25,9 @@ const messageRoomSchema = new mongoose.Schema({
       },
     },
   ],
-  origin: {
+  title: {
     type: String,
+    required: true,
   },
 });
 const MessageRoom =

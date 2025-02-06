@@ -61,6 +61,10 @@ const travelSchema = new mongoose.Schema({
       },
     },
   ],
+  chatRoom: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "MessageRoom",
+  },
 });
 
 const Travel =
