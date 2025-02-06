@@ -15,7 +15,7 @@ The Women Safety App is an innovative solution designed to enhance security and 
 * [ ] A platform for women to share experiences, seek advice, and build a support network.
 
 #### ⚖️ Legal Aid Chatbot
-* [ ] Provides instant legal advice and safety resources tailored to women’s rights.
+* [X] Provides instant legal advice and safety resources tailored to women’s rights.
 
 #### 📷 Spycam Detector
 * [ ] Detects hidden surveillance devices, ensuring privacy in public or rented spaces.
