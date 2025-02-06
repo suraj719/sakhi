@@ -55,7 +55,6 @@ function ChatBot() {
                 <div className="markdown-content">
                   <ReactMarkdown
                     components={{
-                      // Style your markdown components
                       h1: ({ node, ...props }) => (
                         <h1 className="text-xl font-bold my-2" {...props} />
                       ),
