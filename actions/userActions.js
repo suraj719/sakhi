@@ -153,3 +153,97 @@ export async function createWellWisher(userId, nickname, passcode) {
     return { success: false, error: err.message };
   }
 }
+export async function loginWellWisher(username, passcode, nickname) {
+  try {
+    await dbConnect();
+    const user = await User.findOne({ username });
+    if (!user) return { success: false, error: "User not found" };
+
+    const wellWisher = user.wellwishers.find(
+      (w) => w.passcode === passcode && w.nickname === nickname
+    );
+    if (!wellWisher) return { success: false, error: "Invalid credentials" };
+
+    const token = jwt.sign(
+      { username: user.username, nickname },
+      process.env.NEXT_PUBLIC_JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return { success: true, token };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function getWellWisherData(token) {
+  try {
+    console.log("Token received:", token);
+
+    if (!token || typeof token !== "string") {
+      return { success: false, error: "Invalid or missing token" };
+    }
+
+    const decoded = jwt.decode(token);
+    if (!decoded || !decoded.username || !decoded.nickname) {
+      return { success: false, error: "Invalid token" };
+    }
+
+    await dbConnect();
+    const user = await User.findOne({ username: decoded.username });
+    if (!user) return { success: false, error: "User not found" };
+
+    const wellWisher = user.wellwishers?.find(
+      (w) => w.nickname === decoded.nickname
+    );
+    if (!wellWisher) return { success: false, error: "Wellwisher not found" };
+
+    return {
+      success: true,
+      username: user.username,
+      wellWisher: JSON.parse(JSON.stringify(wellWisher)),
+    };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+export async function updateEmailWellWisher(email, passcode, user) {
+  try {
+    await dbConnect();
+    let curruser = await User.find({ username: user });
+    curruser = curruser[0];
+    console.log(curruser);
+
+    if (!curruser) return { success: false, error: "User not found" };
+    const wellWisher = curruser.wellwishers.find(
+      (w) => w.passcode === passcode
+    );
+    console.log(wellWisher);
+    if (!wellWisher) return { success: false, error: "Invalid credentials" };
+    wellWisher.email = email;
+    await curruser.save();
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+export async function updatePhnoWellWisher(phoneNo, passcode, user) {
+  try {
+    await dbConnect();
+
+    let curruser = await User.find({ username: user });
+    curruser = curruser[0];
+    console.log(curruser);
+
+    if (!curruser) return { success: false, error: "User not found" };
+    const wellWisher = curruser.wellwishers.find(
+      (w) => w.passcode === passcode
+    );
+    if (!wellWisher) return { success: false, error: "Invalid credentials" };
+    wellWisher.phoneNo = phoneNo;
+    await curruser.save();
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}

@@ -32,12 +32,14 @@ const userSchema = new mongoose.Schema({
       passcode: {
         type: String,
         required: true,
-        email: {
-          type: String,
-        },
-        phoneNo: {
-          type: String,
-        },
+      },
+      email: {
+        type: String,
+        default: "",
+      },
+      phoneNo: {
+        type: String,
+        default: "",
       },
     },
   ],
