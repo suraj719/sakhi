@@ -18,8 +18,12 @@ const ChatRooms = () => {
   const [roomDetails, setRoomDetails] = useState(null);
 
   async function fetchRooms() {
-    const response = await fetchUserRooms(localStorage.getItem("token"));
-    setUserRooms(response);
+    try {
+      const response = await fetchUserRooms(localStorage.getItem("token"));
+      setUserRooms(response);
+    } catch (error) {
+      toast.error("Failed to fetch user rooms");
+    }
   }
 
   async function fetchRoomMessages(roomId) {
@@ -89,7 +93,7 @@ const ChatRooms = () => {
               }`}
               onClick={() => setSelectedRoom(room.roomId)}
             >
-              {room.otherParticipant || "Unknown"}
+              {room.title} {room.participantCount}
             </div>
           ))}
         </div>
@@ -100,7 +104,16 @@ const ChatRooms = () => {
         {selectedRoom ? (
           <div className="flex flex-col h-full">
             <h2 className="text-lg font-bold mb-4">Chat</h2>
-            {roomDetails && roomDetails.origin && <h2>{roomDetails.origin}</h2>}
+
+            {roomDetails &&
+              roomDetails.participants.map((participant) => (
+                <div
+                  key={participant.userId}
+                  className="flex items-center mb-2"
+                >
+                  <p>{participant.username}</p>
+                </div>
+              ))}
             <div className="flex-1 overflow-y-auto border p-4">
               {messages &&
                 messages.map((msg, index) => (

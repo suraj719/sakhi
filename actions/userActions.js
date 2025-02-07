@@ -4,7 +4,6 @@ import User from "../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
-import MessageRoom from "../models/messageRoom";
 
 const signupSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters long"),
@@ -71,71 +70,45 @@ export async function addUser({ username, password, email, phoneNo }) {
     };
   }
 }
+
 export async function loginUser({ type, slug, password }) {
   try {
     await dbConnect();
+    let user;
+
     if (type === "email") {
-      const user = await User.findOne({ email: slug });
-      if (!user) return { success: false, error: "User not found" };
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return { success: false, error: "Invalid credentials" };
-      const token = jwt.sign(
-        { user: user._id.toString() },
-        process.env.NEXT_PUBLIC_JWT_SECRET,
-        { expiresIn: "7d" }
-      );
-      return {
-        success: true,
-        user: {
-          _id: user._id.toString(),
-          username: user.username,
-          email: user.email,
-        },
-        token,
-      };
+      user = await User.findOne({ email: slug }).lean();
     } else if (type === "phoneNo") {
-      const user = await User.findOne({ phoneNo: slug });
-      if (!user) return { success: false, error: "User not found" };
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return { success: false, error: "Invalid credentials" };
-      const token = jwt.sign(
-        { user: user._id.toString() },
-        process.env.NEXT_PUBLIC_JWT_SECRET,
-        { expiresIn: "7d" }
-      );
-      return {
-        success: true,
-        user: {
-          _id: user._id.toString(),
-          username: user.username,
-          email: user.email,
-        },
-        token,
-      };
+      user = await User.findOne({ phoneNo: slug }).lean();
     } else {
-      const user = await User.findOne({ username: slug });
-      if (!user) return { success: false, error: "User not found" };
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return { success: false, error: "Invalid credentials" };
-      const token = jwt.sign(
-        { user: user._id.toString() },
-        process.env.NEXT_PUBLIC_JWT_SECRET,
-        { expiresIn: "7d" }
-      );
-      return {
-        success: true,
-        user: {
-          _id: user._id.toString(),
-          username: user.username,
-          email: user.email,
-        },
-        token,
-      };
+      user = await User.findOne({ username: slug }).lean();
     }
+
+    if (!user) return { success: false, error: "User not found" };
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return { success: false, error: "Invalid credentials" };
+
+    const token = jwt.sign(
+      { user: user._id.toString() },
+      process.env.NEXT_PUBLIC_JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return {
+      success: true,
+      user: {
+        _id: user._id.toString(),
+        username: user.username,
+        email: user.email,
+      },
+      token,
+    };
   } catch (err) {
     return { success: false, error: err.message };
   }
 }
+
 export async function getUser(token) {
   try {
     await dbConnect();

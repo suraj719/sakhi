@@ -6,16 +6,16 @@ The Women Safety App is an innovative solution designed to enhance security and 
 
 ### 🚀 Safety Tools & Assistance
 #### 🔍 Travel Buddy
-* [ ] Real-time route tracking and updates to trusted contacts.
+* [X] Finding someone safe to travel with and bridge those communication gaps with chat rooms
 
 #### 🏠 Secure Places Marking
 * [ ] Users can mark and rate locations based on security levels, aiding informed decision-making.
 
 #### 👥 Community Forums
-* [ ] A platform for women to share experiences, seek advice, and build a support network.
+* [X] A platform for women to share experiences, seek advice, and build a support network.
 
 #### ⚖️ Legal Aid Chatbot
-* [ ] Provides instant legal advice and safety resources tailored to women’s rights.
+* [X] Provides instant legal advice and safety resources tailored to women’s rights.
 
 #### 📷 Spycam Detector
 * [ ] Detects hidden surveillance devices, ensuring privacy in public or rented spaces.
