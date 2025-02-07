@@ -23,6 +23,24 @@ const userSchema = new mongoose.Schema({
       ref: "MessageRoom",
     },
   ],
+  wellwishers: [
+    {
+      nickname: {
+        type: String,
+        required: true,
+      },
+      passcode: {
+        type: String,
+        required: true,
+        email: {
+          type: String,
+        },
+        phoneNo: {
+          type: String,
+        },
+      },
+    },
+  ],
 });
 
 const User = mongoose.models?.User || mongoose.model("User", userSchema);
