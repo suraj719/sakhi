@@ -21,7 +21,6 @@ function CommunityPage() {
   const [user, setUser] = useState(null);
   const [isMember, setIsMember] = useState(false);
   const [activePostId, setActivePostId] = useState(null);
-  const [newComment, setNewComment] = useState("");
 
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
@@ -99,10 +98,9 @@ function CommunityPage() {
 
   const handleCancelComment = () => {
     setActivePostId(null);
-    setNewComment("");
   };
 
-  const handleSubmitComment = async (postId) => {
+  const handleSubmitComment = async (postId, commentText) => {
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Please login to comment");
@@ -114,17 +112,18 @@ function CommunityPage() {
       return;
     }
 
+    if (!commentText || commentText.trim() === "") {
+      toast.error("Comment cannot be empty");
+      return;
+    }
+
     try {
-      const response = await createComment(
-        postId,
-        { comment: newComment },
-        token
-      );
+      console.log("Submitting comment:", commentText); // Debugging
+      const response = await createComment(postId, commentText.trim(), token);
       if (response.success) {
         toast.success("Comment posted successfully!");
-        setNewComment("");
+        fetchPosts(); // Refresh comments
         setActivePostId(null);
-        fetchPosts();
       } else {
         toast.error(response.error);
       }
@@ -160,10 +159,9 @@ function CommunityPage() {
               onComment={handleComment}
               isCommenting={activePostId === post._id}
               onCancelComment={handleCancelComment}
-              onSubmitComment={(commentText) => {
-                setNewComment(commentText);
-                handleSubmitComment(post._id);
-              }}
+              onSubmitComment={(commentText) =>
+                handleSubmitComment(post._id, commentText)
+              }
             />
           ))
         ) : (

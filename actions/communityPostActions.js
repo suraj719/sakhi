@@ -111,7 +111,7 @@ export async function createPost(communityId, postData, token) {
   }
 }
 
-export async function createComment(postId, commentData, token) {
+export async function createComment(postId, newComment, token) {
   try {
     await dbConnect();
 
@@ -121,6 +121,14 @@ export async function createComment(postId, commentData, token) {
 
     if (!postId) {
       throw new Error("Post ID is required");
+    }
+
+    if (
+      !newComment ||
+      typeof newComment !== "string" ||
+      newComment.trim() === ""
+    ) {
+      throw new Error("Comment text is required");
     }
 
     const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
@@ -138,29 +146,18 @@ export async function createComment(postId, commentData, token) {
       throw new Error("Post not found");
     }
 
-    const newComment = {
+    const commentToAdd = {
       user: user._id,
-      comment: commentData.comment,
+      comment: newComment.trim(),
       createdAt: new Date(),
     };
 
-    post.comments.push(newComment);
+    post.comments.push(commentToAdd);
     await post.save();
-
-    const lastComment = post.comments[post.comments.length - 1];
 
     return {
       success: true,
       message: "Comment posted successfully!",
-      comment: {
-        _id: lastComment._id.toString(),
-        comment: lastComment.comment,
-        user: {
-          _id: user._id.toString(),
-          username: user.username,
-        },
-        createdAt: lastComment.createdAt,
-      },
     };
   } catch (err) {
     console.error("Error in createComment:", err);
