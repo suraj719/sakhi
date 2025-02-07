@@ -12,7 +12,7 @@ The Women Safety App is an innovative solution designed to enhance security and 
 * [ ] Users can mark and rate locations based on security levels, aiding informed decision-making.
 
 #### 👥 Community Forums
-* [ ] A platform for women to share experiences, seek advice, and build a support network.
+* [X] A platform for women to share experiences, seek advice, and build a support network.
 
 #### ⚖️ Legal Aid Chatbot
 * [X] Provides instant legal advice and safety resources tailored to women’s rights.
