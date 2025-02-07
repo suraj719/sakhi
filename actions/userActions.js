@@ -113,7 +113,15 @@ export async function getUser(token) {
   try {
     await dbConnect();
     const decoded = jwt.decode(token);
-    const user = await User.findById(decoded.user).lean();
+
+    let query = User.findById(decoded.user).lean();
+
+    const userExists = await User.exists({ _id: decoded.user });
+    if (userExists && userExists.wellwishers?.length > 0) {
+      query = query.populate("wellwishers");
+    }
+
+    const user = await query;
 
     if (!user) return { success: false, error: "User not found" };
 
@@ -125,6 +133,23 @@ export async function getUser(token) {
       },
     };
   } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+export async function createWellWisher(userId, nickname, passcode) {
+  try {
+    await dbConnect();
+    const user = await User.findById(userId);
+
+    if (!user) return { success: false, error: "User not found" };
+
+    user.wellwishers.push({ nickname, passcode });
+    await user.save();
+
+    return { success: true };
+  } catch (err) {
+    console.error("Error saving well-wisher:", err);
     return { success: false, error: err.message };
   }
 }
