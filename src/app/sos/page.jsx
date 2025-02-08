@@ -11,15 +11,7 @@ import {
 } from "firebase/storage";
 
 // Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDbt6DZgSe65sCB17tWYUTimDEF87LsEGA",
-  authDomain: "sakhi-a8c28.firebaseapp.com",
-  projectId: "sakhi-a8c28",
-  storageBucket: "sakhi-a8c28.appspot.com", // Corrected storage bucket URL
-  messagingSenderId: "852008971955",
-  appId: "1:852008971955:web:b8fd2801608d52b29e0ac6",
-  measurementId: "G-EB3KCF16JR",
-};
+import { firebaseConfig } from "../../../utils/firebase";
 
 // Initialize Firebase only if not already initialized
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
