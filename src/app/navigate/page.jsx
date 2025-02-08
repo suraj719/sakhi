@@ -8,9 +8,12 @@ import {
   MapControl,
   useMapsLibrary,
   useMap,
-  Marker,
+  AdvancedMarker,
+  InfoWindow,
+  Pin,
 } from "@vis.gl/react-google-maps";
 import { getUser, updateLocationUser } from "../../../actions/userActions";
+import { getMarkings, createMarking } from "../../../actions/markingActions";
 import { toast } from "sonner";
 
 export default function MapWithSearch() {
@@ -18,51 +21,86 @@ export default function MapWithSearch() {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [showUserMarker, setShowUserMarker] = useState(true);
+  const [markings, setMarkings] = useState([]);
+  const [selectedMark, setSelectedMark] = useState(null);
   const directionsRendererRef = useRef(null);
 
-  const PlaceAutocompleteClassic = ({ onPlaceSelect }) => {
-    const map = useMap();
-    const [placeAutocomplete, setPlaceAutocomplete] = useState();
-    const inputRef = useRef(null);
-    const places = useMapsLibrary("places");
+  const fetchMarkings = useCallback(async () => {
+    const response = await getMarkings();
+    if (response.success) {
+      setMarkings(response.data);
+    } else {
+      toast.error("Failed to fetch security markings");
+    }
+  }, []);
 
-    useEffect(() => {
-      if (!places || !inputRef.current) return;
+  const fetchUser = useCallback(async () => {
+    const response = await getUser(localStorage.getItem("token"));
+    if (response.success) {
+      setUser(response.user);
+    } else {
+      toast.error(response.error);
+    }
+    return response.user;
+  }, []);
 
-      const options = {
-        fields: ["geometry", "name", "formatted_address"],
-      };
+  const handleAddMarking = async (markType) => {
+    if (!userLocation || !user) {
+      toast.error("User location or user data is missing");
+      return;
+    }
 
-      setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
-    }, [places]);
+    const comment = prompt("Please provide a comment about this place:");
+    if (!comment) {
+      toast.error(
+        "please provide something about this place stating why you are marking this place as unsafe or dangerous"
+      );
+      return;
+    }
 
-    useEffect(() => {
-      if (!placeAutocomplete) return;
+    const response = await createMarking({
+      comment,
+      markType,
+      location: userLocation,
+      userId: user._id,
+    });
 
-      placeAutocomplete.addListener("place_changed", () => {
-        const place = placeAutocomplete.getPlace();
-        if (place.geometry) {
-          if (directionsRendererRef.current) {
-            directionsRendererRef.current.setMap(null);
-          }
-          onPlaceSelect(place);
-          map.fitBounds(place.geometry.viewport);
-          setShowUserMarker(false);
-        }
-      });
-    }, [onPlaceSelect, placeAutocomplete]);
-
-    return (
-      <div className="bg-white p-1 rounded-lg shadow-md border border-gray-300">
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Search destination..."
-          className="p-2 text-xl w-80 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-    );
+    if (response.success) {
+      toast.success("Marking added successfully");
+      fetchMarkings();
+    } else {
+      toast.error("Failed to add marking");
+    }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchMarkings();
+      const userdata = await fetchUser();
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const location = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            setUserLocation(location);
+            if (userdata) {
+              updateLocationUser(
+                location.lat,
+                location.lng,
+                userdata?.username
+              );
+            }
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+          }
+        );
+      }
+    };
+    fetchData();
+  }, [fetchUser, fetchMarkings]);
 
   function Directions({ origin, destination }) {
     const map = useMap();
@@ -107,70 +145,143 @@ export default function MapWithSearch() {
 
     return null;
   }
-  const fetchUser = useCallback(async () => {
-    const response = await getUser(localStorage.getItem("token"));
-    if (response.success) {
-      setUser(response.user);
-    } else {
-      toast.error(response.error);
-    }
-    return response.user;
-  }, []);
+  const PlaceAutocompleteClassic = ({ onPlaceSelect }) => {
+    const map = useMap();
+    const [placeAutocomplete, setPlaceAutocomplete] = useState();
+    const inputRef = useRef(null);
+    const places = useMapsLibrary("places");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const userdata = await fetchUser();
-      console.log(userdata);
+    useEffect(() => {
+      if (!places || !inputRef.current) return;
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const location = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            setUserLocation(location);
-            if (user)
-              updateLocationUser(location.lat, location.lng, user?.username);
-          },
-          (error) => {
-            console.error("Error getting location:", error);
+      const options = {
+        fields: ["geometry", "name", "formatted_address"],
+      };
+
+      setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
+    }, [places]);
+
+    useEffect(() => {
+      if (!placeAutocomplete) return;
+
+      placeAutocomplete.addListener("place_changed", () => {
+        const place = placeAutocomplete.getPlace();
+        if (place.geometry) {
+          if (directionsRendererRef.current) {
+            directionsRendererRef.current.setMap(null);
           }
-        );
-      }
-    };
+          onPlaceSelect(place);
+          map.fitBounds(place.geometry.viewport);
+          setShowUserMarker(false);
+        }
+      });
+    }, [onPlaceSelect, placeAutocomplete]);
 
-    fetchData(); // Call the async function
-  }, [fetchUser]);
+    return (
+      <div className="bg-white p-1 rounded-lg shadow-md border border-gray-300">
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Search destination..."
+          className="p-2 text-xl w-80 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+    );
+  };
 
   return (
-    <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY}>
-      <div className="relative w-screen h-screen flex items-center justify-center">
-        {userLocation && (
-          <>
-            <div className="w-[90vw] h-[80vh] rounded-xl overflow-hidden shadow-lg border border-gray-300">
-              <Map
-                style={{ width: "100%", height: "100%" }}
-                defaultCenter={userLocation}
-                defaultZoom={15}
-                gestureHandling="greedy"
-                disableDefaultUI={true}
-              >
-                {showUserMarker && <Marker position={userLocation} />}
-                {selectedPlace && (
-                  <Directions
-                    origin={userLocation}
-                    destination={selectedPlace.geometry.location}
-                  />
-                )}
-              </Map>
-            </div>
-            <MapControl position={ControlPosition.TOP_RIGHT}>
-              <PlaceAutocompleteClassic onPlaceSelect={setSelectedPlace} />
-            </MapControl>
-          </>
-        )}
+    <div className="justify-center w-full flex flex-col">
+      <div className="ms-16 mb-4 flex gap-2">
+        <button
+          className="bg-yellow-500 text-white px-4 py-2 rounded-md"
+          onClick={() => handleAddMarking(1)}
+        >
+          Mark place as unsafe
+        </button>
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded-md"
+          onClick={() => handleAddMarking(2)}
+        >
+          Mark place as Danger
+        </button>
       </div>
-    </APIProvider>
+      <APIProvider
+        apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY}
+        libraries={["marker"]}
+      >
+        <div className=" flex items-center justify-center">
+          {userLocation && (
+            <>
+              <div className="w-[90vw] h-[80vh] rounded-xl overflow-hidden shadow-lg border border-gray-300">
+                <Map
+                  style={{ width: "100%", height: "100%" }}
+                  defaultCenter={userLocation}
+                  defaultZoom={15}
+                  gestureHandling="greedy"
+                  // disableDefaultUI={true}
+                  mapId="b0d1b3c3c1a5b6d1"
+                >
+                  {selectedPlace && (
+                    <Directions
+                      origin={userLocation}
+                      destination={selectedPlace.geometry.location}
+                    />
+                  )}
+                  {showUserMarker && (
+                    <AdvancedMarker
+                      title="current location"
+                      position={userLocation}
+                    />
+                  )}
+                  {markings.map((mark) => (
+                    <AdvancedMarker
+                      key={mark._id}
+                      position={mark.location}
+                      onClick={() => setSelectedMark(mark)}
+                      title="Marked location"
+                    >
+                      <Pin
+                        background={mark.markType === 1 ? "#f6e05e" : "#f56565"}
+                        borderColor={
+                          mark.markType === 1 ? "#f6e05e" : "#f56565"
+                        }
+                        glyphColor={"#0f677a"}
+                      ></Pin>
+                    </AdvancedMarker>
+                  ))}
+                  {selectedMark && (
+                    <InfoWindow
+                      position={selectedMark.location}
+                      maxWidth={200}
+                      onCloseClick={() => setSelectedMark(null)}
+                    >
+                      <div>
+                        <p>
+                          <span className="font-bold">Reason:</span>{" "}
+                          {selectedMark.comment}
+                        </p>
+                        <p>
+                          <span className="font-bold">Marked Date:</span>
+                          {new Date(selectedMark.createdAt).toUTCString()}
+                        </p>
+                        <p>
+                          <span className="font-bold">Remark:</span>
+                          {selectedMark.markType === 1
+                            ? "Not advised to go"
+                            : "Danger zone"}
+                        </p>
+                      </div>
+                    </InfoWindow>
+                  )}
+                </Map>
+              </div>
+              <MapControl position={ControlPosition.TOP_RIGHT}>
+                <PlaceAutocompleteClassic onPlaceSelect={setSelectedPlace} />
+              </MapControl>
+            </>
+          )}
+        </div>
+      </APIProvider>
+    </div>
   );
 }
