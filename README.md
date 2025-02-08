@@ -32,7 +32,7 @@ The Women Safety App is an innovative solution designed to enhance security and 
 * [ ] Sends alerts, live location, and audio/video recordings to trusted contacts and authorities.
 
 #### 📞 Fake Calls
-* [ ] Simulates incoming calls with pre-recorded messages to help users escape uncomfortable situations.
+* [X] Simulates incoming calls with pre-recorded messages to help users escape uncomfortable situations.
 
 #### 🏢 NGO Connectivity
 * [ ] Links users to organizations offering legal aid, mental health support, and other assistance.
@@ -41,7 +41,7 @@ The Women Safety App is an innovative solution designed to enhance security and 
 * [ ] Curates educational and professional growth resources specifically for women.
 
 #### 🔴 One-Touch Safety Mode
-* [ ] Activates a suite of security measures, including live recording, location sharing, and alerts to trusted contacts.
+* [X] Activates a suite of security measures, including live recording, location sharing, and alerts to trusted contacts.
 
 ## 🌍 Alignment with UN Sustainable Development Goals (SDGs)
 

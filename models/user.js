@@ -23,6 +23,16 @@ const userSchema = new mongoose.Schema({
       ref: "MessageRoom",
     },
   ],
+  currentLocation: {
+    lat: {
+      type: Number,
+      default: 0,
+    },
+    lng: {
+      type: Number,
+      default: 0,
+    },
+  },
   wellwishers: [
     {
       nickname: {
@@ -40,6 +50,14 @@ const userSchema = new mongoose.Schema({
       phoneNo: {
         type: String,
         default: "",
+      },
+    },
+  ],
+  sosrecording: [
+    {
+      recordingUrl: {
+        type: String,
+        required: true,
       },
     },
   ],
