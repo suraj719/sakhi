@@ -1,5 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { MessageSquare, User, Clock } from "lucide-react";
 
 export default function PostCard({
   post,
@@ -16,56 +25,78 @@ export default function PostCard({
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h3 className="text-xl font-bold mb-2">{post.title}</h3>
-      <p className="text-gray-700 mb-4">{post.content}</p>
-      <div className="text-sm text-gray-500 mb-4">
-        Posted by {post.author?.username || "Unknown"} on{" "}
-        {new Date(post.createdAt).toLocaleDateString()}
-      </div>
+    <Card className="bg-white border-none shadow-lg">
+      <CardHeader className="space-y-2">
+        <div className="flex items-center space-x-2">
+          <User className="h-5 w-5 text-[#dc2446]" />
+          <span className="text-sm text-gray-600">
+            {post.author?.username || "Unknown"}
+          </span>
+          <span className="text-gray-400">•</span>
+          <Clock className="h-4 w-4 text-gray-400" />
+          <span className="text-sm text-gray-600">
+            {new Date(post.createdAt).toLocaleDateString()}
+          </span>
+        </div>
+        <h3 className="text-xl font-semibold text-black">{post.title}</h3>
+      </CardHeader>
 
-      <div className="mt-4">
-        <h4 className="font-bold mb-2">
-          Comments ({post.comments?.length || 0})
-        </h4>
-        {post.comments?.map((comment, index) => (
-          <div key={index} className="bg-gray-50 p-3 rounded mb-2">
-            <p className="text-gray-800">{comment.comment}</p>
-            <p className="text-sm text-gray-500">
-              {new Date(comment.createdAt).toLocaleDateString()}
-            </p>
+      <CardContent>
+        <p className="text-gray-700 leading-relaxed">{post.content}</p>
+
+        <div className="mt-6 space-y-4">
+          <div className="flex items-center space-x-2">
+            <MessageSquare className="h-5 w-5 text-[#dc2446]" />
+            <span className="font-medium text-black">
+              Comments ({post.comments?.length || 0})
+            </span>
           </div>
-        ))}
 
+          {post.comments?.map((comment, index) => (
+            <div key={index} className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-gray-800 mb-2">{comment.comment}</p>
+              <div className="flex items-center space-x-2 text-sm text-gray-500">
+                <Clock className="h-4 w-4" />
+                <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+
+      <CardFooter className="flex flex-col items-stretch">
         {!isCommenting ? (
-          <button
-            onClick={() => onComment(post._id)}
-            className="text-blue-500 mt-2 text-sm">
+          <Button
+            variant="outline"
+            className="w-full border-[#dc2446] text-[#dc2446] hover:bg-[#dc2446] hover:text-white"
+            onClick={() => onComment(post._id)}>
+            <MessageSquare className="h-4 w-4 mr-2" />
             Add Comment
-          </button>
+          </Button>
         ) : (
-          <div className="mt-4">
-            <textarea
-              className="w-full p-2 border rounded"
+          <div className="w-full space-y-4">
+            <Textarea
               placeholder="Write your comment..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
+              className="w-full min-h-[100px] border-gray-200 focus:border-[#dc2446] focus:ring-[#dc2446]"
             />
-            <div className="mt-2 space-x-2">
-              <button
-                onClick={handleCommentSubmit}
-                className="bg-blue-500 text-white px-3 py-1 rounded text-sm">
-                Post Comment
-              </button>
-              <button
+            <div className="flex justify-end space-x-2">
+              <Button
+                variant="outline"
                 onClick={onCancelComment}
-                className="text-gray-500 px-3 py-1 rounded text-sm">
+                className="text-gray-500 hover:text-gray-700">
                 Cancel
-              </button>
+              </Button>
+              <Button
+                onClick={handleCommentSubmit}
+                className="bg-[#dc2446] text-white hover:bg-[#dc2446]/90">
+                Post Comment
+              </Button>
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }

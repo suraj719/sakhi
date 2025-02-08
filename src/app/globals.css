@@ -1,6 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -97,4 +99,11 @@
   --button-danger-color-hover: #bc2c2c;
   --button-danger-color-active: #af2929;
   --button-danger-border: none;
+}
+
+.logo-font {
+  font-family: "Dancing Script", cursive;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }

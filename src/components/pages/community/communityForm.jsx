@@ -1,13 +1,12 @@
 "use client";
 import React, { useState } from "react";
+import { Dialog } from "@headlessui/react";
 
 export default function CreateCommunityModal({ isOpen, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
-
-  if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,13 +16,21 @@ export default function CreateCommunityModal({ isOpen, onClose, onSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Create New Community</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/40" />
+
+        <div className="relative bg-white p-8 w-full max-w-md">
+          <Dialog.Title className="text-2xl font-bold text-black mb-6">
+            Create New Community
+          </Dialog.Title>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium text-black mb-2">
                 Community Name
               </label>
               <input
@@ -32,12 +39,13 @@ export default function CreateCommunityModal({ isOpen, onClose, onSubmit }) {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="w-full p-2 border rounded"
+                className="w-full px-4 py-2 text-black border border-neutral-200 focus:border-black transition-colors"
                 required
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium text-black mb-2">
                 Description
               </label>
               <textarea
@@ -45,27 +53,28 @@ export default function CreateCommunityModal({ isOpen, onClose, onSubmit }) {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                className="w-full p-2 border rounded"
+                className="w-full px-4 py-2 text-black border border-neutral-200 focus:border-black transition-colors"
                 rows={4}
                 required
               />
             </div>
-            <div className="flex justify-end space-x-2">
+
+            <div className="flex justify-end space-x-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800">
+                className="px-4 py-2 text-sm font-medium text-neutral-600 hover:text-black transition-colors">
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                className="px-4 py-2 text-sm font-medium bg-black text-white hover:bg-neutral-900 transition-colors">
                 Create Community
               </button>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </Dialog>
   );
 }
