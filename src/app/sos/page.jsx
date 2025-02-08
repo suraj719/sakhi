@@ -9,6 +9,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { toast } from "sonner"; // Import Sonner for toast notifications
 
 // Firebase configuration
 import { firebaseConfig } from "../../../utils/firebase";
@@ -21,73 +22,90 @@ const SOSButton = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [user, setUser] = useState(null);
+  const [recordingInterval, setRecordingInterval] = useState(null);
+  const [stream, setStream] = useState(null);
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      const userStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
+      setStream(userStream);
 
-      const recorder = new MediaRecorder(stream);
+      const recorder = new MediaRecorder(userStream, {
+        mimeType: "video/webm",
+      });
       let chunks = [];
 
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) chunks.push(event.data);
       };
 
-      recorder.onstop = async () => {
-        if (chunks.length === 0) {
-          alert("No video recorded. Please try again.");
-          return;
-        }
+      const saveRecording = async () => {
+        if (chunks.length === 0) return;
 
         const videoBlob = new Blob(chunks, { type: "video/webm" });
-        const videoFile = new File([videoBlob], "sos_video.webm");
+        const videoFile = new File([videoBlob], `sos_${Date.now()}.webm`);
 
-        // Upload to Firebase Storage
         const filePath = `sos_videos/${
-          user.username
-        }_${Date.now()}_sos_video.webm`;
+          user?.username
+        }_${Date.now()}_sos_part.webm`;
         const storageRef = ref(storage, filePath);
         const uploadTask = uploadBytesResumable(storageRef, videoFile);
 
         uploadTask.on(
           "state_changed",
-          null,
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            toast.info(`Uploading segment: ${progress.toFixed(2)}%`);
+          },
           (error) => {
-            alert("Error uploading video to Firebase: " + error.message);
+            toast.error("Error uploading video segment: " + error.message);
           },
           async () => {
             const videoUrl = await getDownloadURL(storageRef);
-
-            // Save video URL to database
             const res = await saveSOSRecording(
               localStorage.getItem("token"),
               videoUrl
             );
-
             if (res.success) {
-              alert("SOS video uploaded and saved successfully!");
+              toast.success("SOS video segment uploaded successfully!");
             } else {
-              alert("Failed to save recording URL");
+              toast.error("Failed to save recording URL");
             }
           }
         );
+
+        chunks = [];
+      };
+
+      recorder.onstop = () => {
+        clearInterval(recordingInterval);
+        saveRecording();
       };
 
       recorder.start();
+
+      // Upload every 20 seconds
+      const interval = setInterval(() => {
+        recorder.stop();
+        saveRecording();
+        recorder.start();
+      }, 20000);
+
+      setRecordingInterval(interval);
       setIsRecording(true);
       setMediaRecorder(recorder);
+      toast.success("Recording started...");
 
-      // Stop recording after 5 minutes
+      // Auto-stop after 5 minutes
       setTimeout(() => {
-        recorder.stop();
-        stream.getTracks().forEach((track) => track.stop());
-        setIsRecording(false);
+        stopRecording();
       }, 5 * 60 * 1000);
     } catch (error) {
-      alert("Error accessing camera/microphone: " + error.message);
+      toast.error("Error accessing camera/microphone: " + error.message);
       console.error("Media access error:", error);
     }
   };
@@ -95,7 +113,14 @@ const SOSButton = () => {
   const stopRecording = () => {
     if (mediaRecorder) {
       mediaRecorder.stop();
+      clearInterval(recordingInterval);
       setIsRecording(false);
+      toast.success("Recording stopped.");
+    }
+
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
     }
   };
 
@@ -105,10 +130,10 @@ const SOSButton = () => {
       if (res.success) {
         setUser(res.user);
       } else {
-        alert(res.error);
+        toast.error(res.error);
       }
     } catch (err) {
-      alert("Failed to fetch user details");
+      toast.error("Failed to fetch user details");
     }
   }
 
