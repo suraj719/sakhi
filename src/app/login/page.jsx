@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,6 +60,11 @@ export default function LoginForm() {
       type: value,
     }));
   };
+  useEffect(() => {
+    if (typeof window !== "undefined" && localStorage.getItem("token")) {
+      router.push("/home");
+    }
+  });
 
   const getInputIcon = () => {
     switch (formData.type) {

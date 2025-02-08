@@ -11,6 +11,8 @@ import { getUser } from "@/../actions/userActions";
 import { toast } from "sonner";
 import PostCard from "@/components/pages/community/postCard";
 import PostForm from "@/components/pages/community/postForm";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
 
 function CommunityPage() {
   const params = useParams();
@@ -145,9 +147,11 @@ function CommunityPage() {
       {isMember ? (
         <PostForm onSubmit={handleCreatePost} />
       ) : (
-        <div className="mb-8 p-4 bg-yellow-50 text-yellow-800 rounded-lg">
-          Join this community to create posts and participate in discussions!
-        </div>
+        <Alert className="mb-8 border-[#dc2446] bg-white">
+          <AlertDescription className="text-black">
+            Join this community to create posts and participate in discussions!
+          </AlertDescription>
+        </Alert>
       )}
 
       <div className="space-y-6">
@@ -165,9 +169,14 @@ function CommunityPage() {
             />
           ))
         ) : (
-          <div className="text-center py-8 text-gray-500">
-            No posts in this community yet. Be the first to create one!
-          </div>
+          <Card className="bg-white">
+            <CardContent className="flex flex-col items-center justify-center p-12">
+              <Plus className="h-12 w-12 text-[#dc2446] mb-4" />
+              <p className="text-lg text-gray-500">
+                No posts in this community yet. Be the first to create one!
+              </p>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>

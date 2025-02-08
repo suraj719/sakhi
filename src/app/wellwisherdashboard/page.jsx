@@ -188,8 +188,7 @@ const Page = () => {
                       <Button onClick={handleEditEmail}>Save</Button>
                       <Button
                         variant="outline"
-                        onClick={() => setEditEmail(false)}
-                      >
+                        onClick={() => setEditEmail(false)}>
                         Cancel
                       </Button>
                     </div>
@@ -198,8 +197,7 @@ const Page = () => {
                       <span>{email || "Not provided"}</span>
                       <Button
                         variant="outline"
-                        onClick={() => setEditEmail(true)}
-                      >
+                        onClick={() => setEditEmail(true)}>
                         Edit
                       </Button>
                     </div>
@@ -218,8 +216,7 @@ const Page = () => {
                       <Button onClick={handleEditPhoneNo}>Save</Button>
                       <Button
                         variant="outline"
-                        onClick={() => setEditPhone(false)}
-                      >
+                        onClick={() => setEditPhone(false)}>
                         Cancel
                       </Button>
                     </div>
@@ -228,8 +225,7 @@ const Page = () => {
                       <span>{phoneNo || "Not provided"}</span>
                       <Button
                         variant="outline"
-                        onClick={() => setEditPhone(true)}
-                      >
+                        onClick={() => setEditPhone(true)}>
                         Edit
                       </Button>
                     </div>
@@ -248,8 +244,7 @@ const Page = () => {
               defaultCenter={{ lat: location.lat, lng: location.lng }}
               defaultZoom={12}
               gestureHandling={"greedy"}
-              disableDefaultUI={true}
-            >
+              disableDefaultUI={true}>
               <Marker position={{ lat: location.lat, lng: location.lng }} />
             </Map>
           </APIProvider>

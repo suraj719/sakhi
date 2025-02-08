@@ -3,6 +3,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/navbar";
 import LegalGuide from "@/components/legalGuide";
+import Image from "next/image";
+import logo from "../../public/sakhi-logo.svg";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +26,16 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-full`}>
+        <div className="flex z-10 fixed justify-start items-center ml-20">
+          <Image
+            className=""
+            src={logo}
+            alt="Sakhi Logo"
+            width={80}
+            height={80}
+          />
+          <p className="text-3xl font-bold logo-font">Sakhi</p>
+        </div>
         <div className="h-full w-full flex flex-row">
           <Navbar />
           <div className="flex-1 md:m-6">{children}</div>

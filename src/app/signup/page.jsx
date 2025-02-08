@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +47,11 @@ export default function SignupForm() {
       [e.target.name]: e.target.value,
     }));
   };
+  useEffect(() => {
+    if (typeof window !== "undefined" && localStorage.getItem("token")) {
+      router.push("/home");
+    }
+  });
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
