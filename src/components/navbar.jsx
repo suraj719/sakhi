@@ -10,7 +10,7 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 import { IoLogoWechat } from "react-icons/io5";
-
+import Link from "next/link";
 function Navbar() {
   const [isVisible, setIsVisible] = useState(false);
   const pathname = usePathname();
@@ -20,7 +20,8 @@ function Navbar() {
         <div
           className="navbar h-[100%] ml-2 z-10 fixed flex flex-col justify-center"
           onMouseEnter={() => setIsVisible(true)}
-          onMouseLeave={() => setIsVisible(false)}>
+          onMouseLeave={() => setIsVisible(false)}
+        >
           {/* Hover trigger area - only visible on md and larger screens */}
           <div className="hidden md:block fixed left-0 top-0 w-2 h-full bg-transparent z-10" />
 
@@ -33,27 +34,42 @@ function Navbar() {
         md:transition-transform md:duration-300 md:ease-in-out
         ${isVisible ? "md:translate-x-0" : "md:translate-x-[-95%]"}
 
-      `}>
+      `}
+          >
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
-              <FaHome className="mx-auto text-2xl" />
+              <Link href="/home">
+                <FaHome className="mx-auto text-2xl" />
+              </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
-              <FaPlane className="mx-auto text-2xl" />
+              <Link href="/travel">
+                <FaPlane className="mx-auto text-2xl" />
+              </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
-              <FaMapMarkerAlt className="mx-auto text-2xl" />
+              <Link href="/navigate">
+                <FaMapMarkerAlt className="mx-auto text-2xl" />
+              </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left flex items-center md:flex-row md:gap-4">
-              <p className="mx-auto font-black text-xl rounded-full">SOS</p>
+              <Link href="/sos">
+                <p className="mx-auto font-black text-xl rounded-full">SOS</p>
+              </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
-              <IoLogoWechat className="mx-auto text-4xl" />
+              <Link href="/chatrooms">
+                <IoLogoWechat className="mx-auto text-4xl" />
+              </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
-              <FaUsers className="mx-auto text-3xl" />
+              <Link href="/community">
+                <FaUsers className="mx-auto text-3xl" />
+              </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
-              <FaUser className="mx-auto text-2xl" />
+              <Link href="/profile">
+                <FaUser className="mx-auto text-2xl" />
+              </Link>
             </div>
           </div>
         </div>

@@ -1,10 +1,9 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import {
-  PhoneMissed,
   MicOff,
   Volume2,
-  Phone,
   PhoneOff,
   MoreVertical,
   PhoneCall,
@@ -13,6 +12,9 @@ import {
 import { motion } from "framer-motion";
 import useSound from "use-sound";
 import { IoKeypad } from "react-icons/io5";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function FakeCallScreen() {
   const [screen, setScreen] = useState("input"); // 'input', 'incoming', 'active'
@@ -62,149 +64,137 @@ export default function FakeCallScreen() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100 text-black">
+    <div className="flex items-center justify-center h-screen bg-gray-100">
       {screen === "input" && (
-        <motion.div
-          className="w-[320px] h-[500px] bg-white rounded-xl shadow-lg flex flex-col items-center p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <h2 className="text-2xl font-bold">Enter Caller Details</h2>
-          <input
-            type="text"
-            placeholder="Name"
-            className="mt-4 p-2 border rounded w-full"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            className="mt-2 p-2 border rounded w-full"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <div className="flex gap-4 mt-4">
-            <button
-              className={`px-4 py-2 rounded ${
-                gender === "Male" ? "bg-blue-500 text-white" : "bg-gray-300"
-              }`}
-              onClick={() => setGender("Male")}
-            >
-              Male
-            </button>
-            <button
-              className={`px-4 py-2 rounded ${
-                gender === "Female" ? "bg-pink-500 text-white" : "bg-gray-300"
-              }`}
-              onClick={() => setGender("Female")}
-            >
-              Female
-            </button>
-          </div>
-          <button
-            className="mt-6 bg-green-500 text-white px-6 py-2 rounded"
-            onClick={() => setScreen("incoming")}
-          >
-            Create Call
-          </button>
-        </motion.div>
+        <Card className="w-[320px]">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center">
+              Enter Caller Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Input
+                type="tel"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              <div className="flex gap-4">
+                <Button
+                  variant={gender === "Male" ? "default" : "outline"}
+                  onClick={() => setGender("Male")}
+                  className="flex-1"
+                >
+                  Male
+                </Button>
+                <Button
+                  variant={gender === "Female" ? "default" : "outline"}
+                  onClick={() => setGender("Female")}
+                  className="flex-1"
+                >
+                  Female
+                </Button>
+              </div>
+              <Button className="w-full" onClick={() => setScreen("incoming")}>
+                Create Call
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {screen === "incoming" && (
-        <motion.div
-          className="w-[320px] h-[640px] bg-gray-900 text-white rounded-xl shadow-lg flex flex-col items-center justify-between relative p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <div className="text-center">
-            <p className="text-lg font-semibold">Incoming Call</p>
-            <p className="text-3xl font-bold mt-1">{name || "Suraj"}</p>
-            <p className="text-md text-gray-400">{phone || "+91 9392130068"}</p>
-          </div>
-          <motion.div
-            className="flex justify-around w-full"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-          >
-            <button
-              onClick={() => setScreen("input")}
-              className="flex flex-col items-center bg-red-600 p-4 rounded-full"
+        <Card className="w-[320px] h-[640px] bg-gray-900 text-white">
+          <CardContent className="flex flex-col items-center justify-between h-full p-6">
+            <div className="text-center">
+              <p className="text-lg font-semibold">Incoming Call</p>
+              <p className="text-3xl font-bold mt-1">{name || "Suraj"}</p>
+              <p className="text-md text-gray-400">
+                {phone || "+91 9392130068"}
+              </p>
+            </div>
+            <motion.div
+              className="flex justify-around w-full"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
             >
-              <PhoneOff size={32} />
-            </button>
-            <motion.button
-              onClick={() => setScreen("active")}
-              className="flex flex-col items-center bg-green-600 p-4 rounded-full"
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ repeat: Infinity, duration: 1.2 }}
-            >
-              <PhoneCall size={32} />
-            </motion.button>
-          </motion.div>
-        </motion.div>
+              <Button
+                variant="destructive"
+                size="icon"
+                className="rounded-full h-16 w-16"
+                onClick={() => setScreen("input")}
+              >
+                <PhoneOff size={32} />
+              </Button>
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.2 }}
+              >
+                <Button
+                  variant="default"
+                  size="icon"
+                  className="rounded-full h-16 w-16 bg-green-600 hover:bg-green-700"
+                  onClick={() => setScreen("active")}
+                >
+                  <PhoneCall size={32} />
+                </Button>
+              </motion.div>
+            </motion.div>
+          </CardContent>
+        </Card>
       )}
 
       {screen === "active" && (
-        <motion.div
-          className="w-[320px] h-[640px] bg-gray-900 text-white rounded-xl shadow-lg flex flex-col items-center justify-between p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <div className="text-center">
-            <p className="text-lg font-semibold">On Call</p>
-            <div className="w-16 h-16 rounded-full bg-gray-700 mx-auto my-4 flex items-center justify-center">
-              <User className="w-10 h-10 text-gray-400" />
+        <Card className="w-[320px] h-[640px] bg-gray-900 text-white">
+          <CardContent className="flex flex-col items-center justify-between h-full p-6">
+            <div className="text-center">
+              <p className="text-lg font-semibold">On Call</p>
+              <div className="w-16 h-16 rounded-full bg-gray-700 mx-auto my-4 flex items-center justify-center">
+                <User className="w-10 h-10 text-gray-400" />
+              </div>
+              <p className="text-3xl font-bold mt-1">{name || "Suraj"}</p>
+              <p className="text-md text-gray-400">
+                {phone || "+91 9392130068"}
+              </p>
+              <p className="text-lg mt-2">{formatTime(timer)}</p>
             </div>
-            <p className="text-3xl font-bold mt-1">{name || "Suraj"}</p>
-            <p className="text-md text-gray-400">{phone || "+91 9392130068"}</p>
-            <p className="text-lg mt-2">{formatTime(timer)}</p>
-          </div>
 
-          {/* Control Buttons - Properly Aligned */}
-          <div className="grid grid-cols-2 gap-6 w-full mt-4">
-            <motion.button
-              className="flex flex-col items-center"
-              whileTap={{ scale: 0.9 }}
+            <div className="grid grid-cols-2 gap-6 w-full mt-4">
+              <Button variant="ghost" className="flex flex-col items-center">
+                <MicOff size={32} />
+                <p className="text-sm mt-1">Mute</p>
+              </Button>
+              <Button variant="ghost" className="flex flex-col items-center">
+                <Volume2 size={32} />
+                <p className="text-sm mt-1">Speaker</p>
+              </Button>
+              <Button variant="ghost" className="flex flex-col items-center">
+                <IoKeypad size={32} />
+                <p className="text-sm mt-1">Keypad</p>
+              </Button>
+              <Button variant="ghost" className="flex flex-col items-center">
+                <MoreVertical size={32} />
+                <p className="text-sm mt-1">Options</p>
+              </Button>
+            </div>
+
+            <Button
+              variant="destructive"
+              size="icon"
+              className="rounded-full h-16 w-16 mt-4"
+              onClick={() => setScreen("input")}
             >
-              <MicOff size={32} />
-              <p className="text-sm mt-1">Mute</p>
-            </motion.button>
-
-            <motion.button
-              className="flex flex-col items-center"
-              whileTap={{ scale: 0.9 }}
-            >
-              <Volume2 size={32} />
-              <p className="text-sm mt-1">Speaker</p>
-            </motion.button>
-
-            <motion.button
-              className="flex flex-col items-center"
-              whileTap={{ scale: 0.9 }}
-            >
-              <IoKeypad size={32} />
-              <p className="text-sm mt-1">Keypad</p>
-            </motion.button>
-
-            <motion.button
-              className="flex flex-col items-center"
-              whileTap={{ scale: 0.9 }}
-            >
-              <MoreVertical size={32} />
-              <p className="text-sm mt-1">Options</p>
-            </motion.button>
-          </div>
-
-          {/* End Call Button */}
-          <motion.button
-            className="bg-red-600 p-4 rounded-full mt-4"
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setScreen("input")}
-          >
-            <PhoneOff size={32} />
-          </motion.button>
-        </motion.div>
+              <PhoneOff size={32} />
+            </Button>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
