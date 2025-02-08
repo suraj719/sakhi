@@ -191,6 +191,7 @@ export async function getWellWisherData(token) {
 
     await dbConnect();
     const user = await User.findOne({ username: decoded.username });
+    console.log(user);
     if (!user) return { success: false, error: "User not found" };
 
     const wellWisher = user.wellwishers?.find(
@@ -243,6 +244,42 @@ export async function updatePhnoWellWisher(phoneNo, passcode, user) {
     wellWisher.phoneNo = phoneNo;
     await curruser.save();
     return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateLocationUser(lat, lng, user) {
+  try {
+    await dbConnect();
+    let curruser = await User.find({ username: user });
+    curruser = curruser[0];
+    console.log(curruser);
+
+    if (!curruser) return { success: false, error: "User not found" };
+    curruser.currentLocation = { lat, lng };
+    await curruser.save();
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function getLocationUser(user) {
+  try {
+    await dbConnect();
+    let curruser = await User.find({ username: user });
+    curruser = curruser[0];
+    console.log(curruser);
+
+    if (!curruser) return { success: false, error: "User not found" };
+    return {
+      success: true,
+      location: {
+        lat: curruser.currentLocation.lat,
+        lng: curruser.currentLocation.lng,
+      },
+    };
   } catch (error) {
     return { success: false, error: error.message };
   }

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import {
+  getLocationUser,
   getWellWisherData,
   updateEmailWellWisher,
   updatePhnoWellWisher,
@@ -10,6 +11,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import {
+  APIProvider,
+  Map,
+  Marker,
+  useMapsLibrary,
+} from "@vis.gl/react-google-maps";
 
 const Page = () => {
   const [user, setUser] = useState(null);
@@ -19,7 +26,13 @@ const Page = () => {
   const [phoneNo, setPhoneNo] = useState("");
   const [editEmail, setEditEmail] = useState(false);
   const [editPhone, setEditPhone] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [distance, setDistance] = useState(null);
+  const [duration, setDuration] = useState(null);
+  const [eta, setEta] = useState(null);
   const fetched = useRef(false);
+  const mapsLibrary = useMapsLibrary("routes");
 
   async function fetchWellWisherData() {
     const token = localStorage.getItem("wellwisher");
@@ -32,7 +45,8 @@ const Page = () => {
     setLoading(true);
     try {
       const res = await getWellWisherData(token);
-      console.log("Response received:", res);
+      const passengerLocation = await getLocationUser(res.username);
+      setLocation(passengerLocation.location);
 
       if (res.success) {
         setUser(res.username);
@@ -40,6 +54,14 @@ const Page = () => {
         setEmail(res.wellWisher.email || "");
         setPhoneNo(res.wellWisher.phoneNo || "");
         toast.message("Data fetched successfully.");
+
+        // Get current location
+        navigator.geolocation.getCurrentPosition((position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        });
       } else {
         toast.error(res.error);
       }
@@ -50,6 +72,30 @@ const Page = () => {
     }
   }
 
+  async function fetchDistanceAndTime() {
+    const service = new google.maps.DistanceMatrixService();
+
+    service.getDistanceMatrix(
+      {
+        origins: [{ lat: userLocation.lat, lng: userLocation.lng }],
+        destinations: [{ lat: location.lat, lng: location.lng }],
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (response, status) => {
+        if (status === "OK") {
+          const result = response.rows[0].elements[0];
+          setDistance(result.distance.text);
+          setDuration(result.duration.text);
+
+          const etaTime = new Date();
+          etaTime.setSeconds(etaTime.getSeconds() + result.duration.value);
+          setEta(etaTime.toLocaleTimeString());
+        } else {
+          console.error("Error fetching distance data:", status);
+        }
+      }
+    );
+  }
   async function handleEditEmail() {
     try {
       const res = await updateEmailWellWisher(email, wellwisher.passcode, user);
@@ -91,8 +137,14 @@ const Page = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (userLocation && location) {
+      fetchDistanceAndTime();
+    }
+  }, [userLocation, location]);
+
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex justify-center gap-4 items-center min-h-screen">
       {loading ? (
         <Loader2 className="w-6 h-6 animate-spin" />
       ) : (
@@ -103,12 +155,26 @@ const Page = () => {
           <CardContent>
             {wellwisher && (
               <div>
-                <h2 className="text-lg font-semibold">
-                  Nickname: {wellwisher.nickname}
-                </h2>
-                <h3 className="text-md text-gray-600">
-                  Passcode: {wellwisher.passcode}
-                </h3>
+                <div>
+                  <h2 className="text-lg font-semibold">
+                    Nickname: {wellwisher.nickname}
+                  </h2>
+                  <h3 className="text-md text-gray-600">
+                    Passcode: {wellwisher.passcode}
+                  </h3>
+                </div>
+                <div>
+                  <div className="mt-4">
+                    <p className="font-bold">To reach {user}</p>
+                    <p>Distance: {distance || "Calculating..."}</p>
+                  </div>
+                  <div className="mt-2">
+                    <p>Estimated Time: {duration || "Calculating..."}</p>
+                  </div>
+                  <div className="mt-2">
+                    <p>ETA: {eta || "Calculating..."}</p>
+                  </div>
+                </div>
                 <div className="mt-4">
                   <label className="text-sm font-medium">Email:</label>
                   {editEmail ? (
@@ -174,6 +240,21 @@ const Page = () => {
           </CardContent>
         </Card>
       )}
+      <div className="rounded-lg">
+        {location && (
+          <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY}>
+            <Map
+              style={{ width: "400px", height: "450px" }}
+              defaultCenter={{ lat: location.lat, lng: location.lng }}
+              defaultZoom={12}
+              gestureHandling={"greedy"}
+              disableDefaultUI={true}
+            >
+              <Marker position={{ lat: location.lat, lng: location.lng }} />
+            </Map>
+          </APIProvider>
+        )}
+      </div>
     </div>
   );
 };

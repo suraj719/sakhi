@@ -23,6 +23,16 @@ const userSchema = new mongoose.Schema({
       ref: "MessageRoom",
     },
   ],
+  currentLocation: {
+    lat: {
+      type: Number,
+      default: 0,
+    },
+    lng: {
+      type: Number,
+      default: 0,
+    },
+  },
   wellwishers: [
     {
       nickname: {
