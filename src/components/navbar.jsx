@@ -33,6 +33,7 @@ function Navbar() {
         fixed bottom-0 left-0 md:relative md:bottom-auto md:top-0 md:pl-4 md:h-[90%]
         md:transition-transform md:duration-300 md:ease-in-out
         ${isVisible ? "md:translate-x-0" : "md:translate-x-[-95%]"}
+
       `}
           >
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
