@@ -98,14 +98,21 @@ export default function Page() {
   }, [fetchTravels, fetchUser]);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container flex flex-col gap-5 mx-auto py-8">
+      <div className="flex flex-col items-start">
+        <h1 className="text-4xl font-bold">Travel Buddy</h1>
+        <p className="text-xl font-medium mt-2">
+          Empowering women, one trip at a time!
+        </p>
+      </div>
+
       <TourDialog />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {travels.map((travel) => (
           <TravelCard
             key={travel._id}
             travel={travel}
-            isOwner={user?._id === travel.creator._id} 
+            isOwner={user?._id === travel.creator._id}
             onApply={() => {
               setSelectedTravel(travel);
               setApplyDialog(true);
@@ -124,8 +131,7 @@ export default function Page() {
         open={!!selectedTravel && !applyDialog && !viewApplicationDialog}
         onOpenChange={(open) => {
           if (!open) setSelectedTravel(null);
-        }}
-      >
+        }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
@@ -170,8 +176,7 @@ export default function Page() {
         onOpenChange={(open) => {
           setApplyDialog(false);
           setSelectedTravel(null);
-        }}
-      >
+        }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Apply as Travel Buddy</DialogTitle>
@@ -191,8 +196,7 @@ export default function Page() {
         onOpenChange={(open) => {
           setViewApplicationDialog(open);
           if (!open) setSelectedTravel(null);
-        }}
-      >
+        }}>
         <DialogContent className="max-w-md p-6 rounded-lg shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-gray-800">
@@ -205,8 +209,7 @@ export default function Page() {
                 application.status !== "rejected" && (
                   <div
                     key={application._id}
-                    className="border rounded-lg p-4 shadow-sm bg-gray-50"
-                  >
+                    className="border rounded-lg p-4 shadow-sm bg-gray-50">
                     <p className="text-gray-700">
                       <strong className="text-gray-900">Applicant:</strong>{" "}
                       {application.applicant.username}
@@ -221,15 +224,13 @@ export default function Page() {
                           <Button
                             onClick={() =>
                               acceptApplicationStatus(application._id)
-                            }
-                          >
+                            }>
                             Accept
                           </Button>
                           <Button
                             onClick={() =>
                               rejectApplicationStatus(application._id)
-                            }
-                          >
+                            }>
                             Reject
                           </Button>
                         </>

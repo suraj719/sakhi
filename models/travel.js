@@ -43,6 +43,9 @@ const travelSchema = new mongoose.Schema({
     enum: ["open", "closed"],
     default: "open",
   },
+  travelDuration: {
+    type: String,
+  },
   applications: [
     {
       applicant: {

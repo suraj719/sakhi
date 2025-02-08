@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -14,18 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createTravel } from "../../../actions/travelActions";
+// import { AwesomeButton } from "react-awesome-button";
+// import "react-awesome-button/dist/styles.css";
+
 import { toast } from "sonner";
 export default function TourDialog() {
   const [isOpen, setIsOpen] = useState(false);
-
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [source, setSource] = useState("");
-  const [destination, setDestination] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
 
   const [tourForm, setTourForm] = useState({
     source: "",
@@ -61,8 +56,8 @@ export default function TourDialog() {
   };
 
   return (
-    <div>
-      <Button variant="outline" onClick={openDialog}>
+    <div className="flex justify-end">
+      <Button className="p-5 px-8 mx-5" onClick={openDialog}>
         Create Trip
       </Button>
 
@@ -76,7 +71,7 @@ export default function TourDialog() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-3 items-center gap-4">
               <Label htmlFor="source" className="text-right">
                 Source
               </Label>
