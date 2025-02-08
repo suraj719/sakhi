@@ -1,6 +1,29 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { getUser } from "../../../actions/userActions";
+import { saveSOSRecording } from "../../../actions/sosActions";
+import { initializeApp, getApps } from "firebase/app";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDbt6DZgSe65sCB17tWYUTimDEF87LsEGA",
+  authDomain: "sakhi-a8c28.firebaseapp.com",
+  projectId: "sakhi-a8c28",
+  storageBucket: "sakhi-a8c28.appspot.com", // Corrected storage bucket URL
+  messagingSenderId: "852008971955",
+  appId: "1:852008971955:web:b8fd2801608d52b29e0ac6",
+  measurementId: "G-EB3KCF16JR",
+};
+
+// Initialize Firebase only if not already initialized
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const storage = getStorage(app);
 
 const SOSButton = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -21,26 +44,51 @@ const SOSButton = () => {
         if (event.data.size > 0) chunks.push(event.data);
       };
 
-      recorder.onstop = () => {
+      recorder.onstop = async () => {
         if (chunks.length === 0) {
           alert("No video recorded. Please try again.");
           return;
         }
 
         const videoBlob = new Blob(chunks, { type: "video/webm" });
-        const url = URL.createObjectURL(videoBlob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${user.username}_${Date.now()}_sos_video.webm`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const videoFile = new File([videoBlob], "sos_video.webm");
+
+        // Upload to Firebase Storage
+        const filePath = `sos_videos/${
+          user.username
+        }_${Date.now()}_sos_video.webm`;
+        const storageRef = ref(storage, filePath);
+        const uploadTask = uploadBytesResumable(storageRef, videoFile);
+
+        uploadTask.on(
+          "state_changed",
+          null,
+          (error) => {
+            alert("Error uploading video to Firebase: " + error.message);
+          },
+          async () => {
+            const videoUrl = await getDownloadURL(storageRef);
+
+            // Save video URL to database
+            const res = await saveSOSRecording(
+              localStorage.getItem("token"),
+              videoUrl
+            );
+
+            if (res.success) {
+              alert("SOS video uploaded and saved successfully!");
+            } else {
+              alert("Failed to save recording URL");
+            }
+          }
+        );
       };
 
       recorder.start();
       setIsRecording(true);
       setMediaRecorder(recorder);
 
+      // Stop recording after 5 minutes
       setTimeout(() => {
         recorder.stop();
         stream.getTracks().forEach((track) => track.stop());
@@ -58,27 +106,31 @@ const SOSButton = () => {
       setIsRecording(false);
     }
   };
+
   async function fetchUserInfo() {
     try {
       const res = await getUser(localStorage.getItem("token"));
-      setUser(res.user);
-      if (!res.success) {
-        toast.error(res.error);
+      if (res.success) {
+        setUser(res.user);
+      } else {
+        alert(res.error);
       }
     } catch (err) {
-      toast.error("Failed to fetch user details");
+      alert("Failed to fetch user details");
     }
   }
+
   useEffect(() => {
     fetchUserInfo();
   }, []);
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <button
         className="w-[250px] h-[250px] bg-red-600 text-white font-bold text-xl rounded-full shadow-lg hover:bg-red-700 transition-all flex items-center justify-center"
         onClick={isRecording ? stopRecording : startRecording}
       >
-        <p className="text-4xl"> {isRecording ? "Stop" : "Start"}</p>
+        <p className="text-4xl">{isRecording ? "Stop" : "Start"}</p>
       </button>
     </div>
   );

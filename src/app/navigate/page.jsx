@@ -107,7 +107,7 @@ export default function MapWithSearch() {
 
     return null;
   }
-  const fetchUser = useCallback(async () => {
+  async function fetchUser() {
     const response = await getUser(localStorage.getItem("token"));
     if (response.success) {
       setUser(response.user);
@@ -115,33 +115,30 @@ export default function MapWithSearch() {
       toast.error(response.error);
     }
     return response.user;
-  }, []);
+  }
+  async function updateLocationCurrUser() {
+    const curruser = await fetchUser();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setUserLocation(location);
+          if (curruser)
+            updateLocationUser(location.lat, location.lng, curruser?.username);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    }
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const userdata = await fetchUser();
-      console.log(userdata);
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const location = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            setUserLocation(location);
-            if (user)
-              updateLocationUser(location.lat, location.lng, user?.username);
-          },
-          (error) => {
-            console.error("Error getting location:", error);
-          }
-        );
-      }
-    };
-
-    fetchData(); // Call the async function
-  }, [fetchUser]);
+    updateLocationCurrUser();
+  }, []);
 
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY}>
