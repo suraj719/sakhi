@@ -25,12 +25,12 @@ const HomePage = () => {
     {
       title: "Scholarship Community",
       icon: "book",
-      onClick: () => router.push("/community/67a70a486aa311607080858f"),
+      onClick: () => router.push("/community/67a5442e342e84b3e961440e"),
     },
     {
       title: "Jobs Community",
       icon: "briefcase",
-      onClick: () => console.log("/community/67a70a486aa311607080858f"),
+      onClick: () => router.push("/community/67a5442e342e84b3e961440e"),
     },
     {
       title: "NGOs & Women's Safety",
