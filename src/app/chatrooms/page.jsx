@@ -6,8 +6,29 @@ import {
   fetchMessages,
   getRoomDetails,
 } from "../../../actions/chatRoomActions";
-import { toast } from "sonner";
 import { getUser } from "../../../actions/userActions";
+import { toast } from "sonner";
+import { Search, Send, Users, Menu, MessageSquare } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 const ChatRooms = () => {
   const [userRooms, setUserRooms] = useState([]);
@@ -16,6 +37,8 @@ const ChatRooms = () => {
   const [newMessage, setNewMessage] = useState("");
   const [user, setUser] = useState(null);
   const [roomDetails, setRoomDetails] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   async function fetchRooms() {
     try {
@@ -31,8 +54,10 @@ const ChatRooms = () => {
     setMessages(response);
   }
 
-  async function handleSendMessage() {
+  async function handleSendMessage(e) {
+    e.preventDefault();
     if (newMessage.trim() === "") return;
+
     try {
       const response = await sendMessage(
         selectedRoom,
@@ -50,10 +75,12 @@ const ChatRooms = () => {
       toast.error("Failed to send message");
     }
   }
+
   async function fetchUser() {
     const response = await getUser(localStorage.getItem("token"));
     setUser(response.user);
   }
+
   async function fetchRoomDetails() {
     try {
       const response = await getRoomDetails(selectedRoom);
@@ -79,75 +106,177 @@ const ChatRooms = () => {
     }
   }, [selectedRoom]);
 
-  return (
-    <div className="flex h-screen">
-      {/* Left Sidebar - Chat Rooms */}
-      <div className="w-1/4 border-r p-4">
-        <h2 className="text-lg font-bold">Chat Rooms</h2>
-        <div className="space-y-2">
-          {userRooms.map((room) => (
-            <div
-              key={room.roomId}
-              className={`p-2 cursor-pointer border rounded-lg ${
-                selectedRoom === room.roomId ? "bg-gray-200" : ""
-              }`}
-              onClick={() => setSelectedRoom(room.roomId)}
-            >
-              {room.title} {room.participantCount}
+  const filteredRooms = userRooms.filter((room) =>
+    room.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const ChatRoomList = () => (
+    <div className="flex flex-col max-h-screen">
+      <div className="p-4">
+        <Input
+          placeholder="Search rooms..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full"
+          prefix={<Search className="w-4 h-4 text-gray-400" />}
+        />
+      </div>
+      <ScrollArea className="flex-1">
+        <div className="space-y-2 px-4">
+          {filteredRooms.map((room) => (
+            <div key={room.roomId}>
+              <Card
+                className={`cursor-pointer transition-all hover:shadow-md ${
+                  selectedRoom === room.roomId
+                    ? "border-primary bg-primary/5"
+                    : ""
+                }`}
+                onClick={() => {
+                  setSelectedRoom(room.roomId);
+                  setIsMobileMenuOpen(false);
+                }}>
+                <CardHeader className="p-4">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base">{room.title}</CardTitle>
+                    <Badge variant="secondary">
+                      <Users className="w-3 h-3 mr-1" />
+                      {room.participantCount}
+                    </Badge>
+                  </div>
+                </CardHeader>
+              </Card>
             </div>
           ))}
         </div>
+      </ScrollArea>
+    </div>
+  );
+
+  return (
+    <div className="flex h-full bg-background">
+      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button */}
+      <Button
+        variant="ghost"
+        className="lg:hidden fixed top-6 left-4 z-50"
+        onClick={() => setIsMobileMenuOpen(true)}>
+        <Menu className="w-6 h-6" />
+      </Button>
+
+      {/* Mobile Sidebar */}
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <SheetContent side="left" className="w-[300px] p-0">
+          <SheetHeader className="p-4">
+            <SheetTitle className="pl-12">Chat Rooms</SheetTitle>
+          </SheetHeader>
+          <ChatRoomList />
+        </SheetContent>
+      </Sheet>
+
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block w-[300px] border-r">
+        <ChatRoomList />
       </div>
 
-      {/* Right Side - Chat Messages */}
-      <div className="w-3/4 p-4 flex flex-col h-full">
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col">
         {selectedRoom ? (
           <div className="flex flex-col h-full">
-            <h2 className="text-lg font-bold mb-4">Chat</h2>
-
-            {roomDetails &&
-              roomDetails.participants.map((participant) => (
-                <div
-                  key={participant.userId}
-                  className="flex items-center mb-2"
-                >
-                  <p>{participant.username}</p>
+            {/* Chat Header */}
+            <div className="border-b p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col ml-12 md:ml-0">
+                  <h2 className="text-xl font-bold">
+                    {roomDetails?.title || "Chat"}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {roomDetails?.participants?.length || 0} participants
+                  </p>
                 </div>
-              ))}
-            <div className="flex-1 overflow-y-auto border p-4">
-              {messages &&
-                messages.map((msg, index) => (
+                {roomDetails && (
+                  <div className="flex -space-x-2">
+                    {roomDetails.participants.slice(0, 3).map((participant) => (
+                      <Avatar key={participant.userId}>
+                        <AvatarFallback>
+                          {participant.username.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                    ))}
+                    {roomDetails.participants.length > 3 && (
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm">
+                        +{roomDetails.participants.length - 3}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Messages Area */}
+            <ScrollArea className="flex-1 p-4">
+              <div className="space-y-4">
+                {messages.map((msg, index) => (
                   <div
                     key={index}
-                    className={`mb-2 p-2 rounded-lg max-w-xs ${
-                      msg.sender === user._id
-                        ? "bg-blue-500 text-white self-end"
-                        : "bg-gray-300 self-start"
-                    }`}
-                  >
-                    <p>{msg.username}</p>
-                    {msg.message}
+                    className={`flex ${
+                      msg.sender === user?._id ? "justify-end" : "justify-start"
+                    }`}>
+                    <div
+                      className={`flex items-start gap-2 space-x-2 max-w-[70%] ${
+                        msg.sender === user?._id ? "flex-row-reverse" : ""
+                      }`}>
+                      <Avatar className="w-10  h-10">
+                        <AvatarFallback className="bg-slate-200">
+                          {msg.username?.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div
+                        className={`rounded-lg py-3 px-5  ${
+                          msg.sender === user?._id
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted"
+                        }`}>
+                        <p className="text-sm font-medium mb-1">
+                          {msg.username}
+                        </p>
+                        <p className="text-sm">{msg.message}</p>
+                      </div>
+                    </div>
                   </div>
                 ))}
-            </div>
-            <div className="mt-4 flex">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
-                className="w-full p-2 border rounded-lg"
-              />
-              <button
-                onClick={handleSendMessage}
-                className="ml-2 p-2 bg-blue-500 text-white rounded-lg"
-              >
-                Send
-              </button>
-            </div>
+              </div>
+            </ScrollArea>
+
+            {/* Message Input */}
+            <form
+              onSubmit={handleSendMessage}
+              className="border-t p-4 space-y-4">
+              <div className="flex items-center space-x-2">
+                <Input
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type your message..."
+                  className="flex-1"
+                />
+                <Button type="submit" className="bg-[#dc2446] p-4">
+                  <Send className="w-4 h-4 mr-2 " />
+                  Send
+                </Button>
+              </div>
+            </form>
           </div>
         ) : (
-          <p className="text-gray-500">Select a chat room to start chatting</p>
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                <MessageSquare className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold">Welcome to Chat</h3>
+              <p className="text-muted-foreground">
+                Select a room to start chatting
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </div>
