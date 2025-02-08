@@ -82,6 +82,7 @@ const SOSButton = () => {
               localStorage.getItem("token"),
               videoUrl
             );
+
             if (res.success) {
               toast.success("SOS video segment uploaded successfully!");
             } else {

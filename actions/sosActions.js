@@ -16,6 +16,36 @@ export async function saveSOSRecording(token, recordingUrl) {
 
     user.sosrecording.push({ recordingUrl });
     await user.save();
+    try {
+      const twilioClient = twilio(
+        process.env.NEXT_PUBLIC_ACCSID,
+        process.env.NEXT_PUBLIC_AUTH_TOKEN
+      );
+      let msg1 = {
+        to: "++917032038148",
+        from: "+16073604815",
+        body: `Current location is:https://maps.google.com/?q=${user.currentLocation.lat},${user.currentLocation.lng}.Current recording URL: ${recordingUrl}`,
+      };
+      let msg2 = {
+        to: "++919392130068",
+        from: "+16073604815",
+        body: `Current location is:https://maps.google.com/?q=${user.currentLocation.lat},${user.currentLocation.log}.Current recording URL: ${recordingUrl}`,
+      };
+      try {
+        const response1 = await twilioClient.messages.create(msg1);
+        const response2 = await twilioClient.messages.create(msg2);
+      } catch (err) {
+        return {
+          success: false,
+          error: err.message,
+        };
+      }
+    } catch (err) {
+      return {
+        success: false,
+        error: err.message,
+      };
+    }
 
     return { success: true };
   } catch (error) {
