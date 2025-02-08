@@ -43,6 +43,14 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
+  sosrecording: [
+    {
+      recordingUrl: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 const User = mongoose.models?.User || mongoose.model("User", userSchema);
