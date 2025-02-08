@@ -1,7 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { getUser } from "../../../actions/userActions";
-import { saveSOSRecording } from "../../../actions/sosActions";
+import {
+  saveSOSRecording,
+  sendInitialTwilioSMS,
+} from "../../../actions/sosActions";
 import { initializeApp, getApps } from "firebase/app";
 import {
   getStorage,
@@ -9,12 +12,10 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { toast } from "sonner"; // Import Sonner for toast notifications
+import { toast } from "sonner";
 
-// Firebase configuration
 import { firebaseConfig } from "../../../utils/firebase";
 
-// Initialize Firebase only if not already initialized
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
@@ -27,6 +28,17 @@ const SOSButton = () => {
 
   const startRecording = async () => {
     try {
+      const res = await sendInitialTwilioSMS(
+        user.username,
+        user.currentLocation.lat,
+        user.currentLocation.lng
+      );
+      if (res.success) {
+        toast.success("Initial SOS SMS sent successfully");
+      } else {
+        toast.error(res.error);
+      }
+
       const userStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
