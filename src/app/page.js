@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { Marquee } from "@/components/ui/marquee";
 import { AnimatedList } from "@/components/ui/animated-list";
-import  WorldMap  from "@/components/ui/world-map";
-import {Carousel, Card} from "@/components/ui/apple-cards-carousel";
-
+import WorldMap from "@/components/ui/world-map";
+import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
+import Link from "next/link";
 
 const files = [
   {
@@ -32,7 +32,6 @@ const files = [
     body: "A loud whistle sound to alert people nearby in case of danger.",
   },
 ];
-
 
 let notifications = [
   {
@@ -70,38 +69,32 @@ const data = [
     category: "Artificial Intelligence",
     title: "You can do more with AI.",
     src: "/1.jpg",
-    
   },
   {
     category: "Productivity",
     title: "Enhance your productivity.",
     src: "/2.jpg",
-   
   },
   {
     category: "Product",
     title: "Launching the new Apple Vision Pro.",
     src: "/3.jpg",
-    
   },
- 
+
   {
     category: "Product",
     title: "Maps for your iPhone 15 Pro Max.",
     src: "/1.jpg",
-    
   },
   {
     category: "iOS",
     title: "Photography just got better.",
     src: "/2.jpg",
-    
   },
   {
     category: "Hiring",
     title: "Hiring for a Staff Software Engineer",
-    src:"/3.jpg",
-    
+    src: "/3.jpg",
   },
 ];
 
@@ -117,7 +110,10 @@ const Notification = ({ name, description, icon, color, time }) => {
       )}
     >
       <div className="flex flex-row items-center gap-3">
-        <div className="flex size-10 items-center justify-center rounded-2xl" style={{ backgroundColor: color }}>
+        <div
+          className="flex size-10 items-center justify-center rounded-2xl"
+          style={{ backgroundColor: color }}
+        >
           <span className="text-lg">{icon}</span>
         </div>
         <div className="flex flex-col overflow-hidden">
@@ -126,7 +122,9 @@ const Notification = ({ name, description, icon, color, time }) => {
             <span className="mx-1">·</span>
             <span className="text-xs text-gray-500">{time}</span>
           </figcaption>
-          <p className="text-sm font-normal dark:text-white/60">{description}</p>
+          <p className="text-sm font-normal dark:text-white/60">
+            {description}
+          </p>
         </div>
       </div>
     </figure>
@@ -143,8 +141,13 @@ const features = [
     background: (
       <Marquee pauseOnHover className="absolute top-10 [--duration:20s]">
         {files.map((f, idx) => (
-          <figure key={idx} className="relative w-40 overflow-hidden rounded-xl border p-4">
-            <figcaption className="text-sm font-medium dark:text-white">{f.name}</figcaption>
+          <figure
+            key={idx}
+            className="relative w-40 overflow-hidden rounded-xl border p-4"
+          >
+            <figcaption className="text-sm font-medium dark:text-white">
+              {f.name}
+            </figcaption>
             <blockquote className="mt-2 text-xs">{f.body}</blockquote>
           </figure>
         ))}
@@ -173,7 +176,11 @@ const features = [
     href: "#",
     cta: "Learn more",
     className: "col-span-1 ",
-    background: <div className="absolute inset-0 flex items-center justify-center text-xl font-bold text-red-500">🚨 SOS</div>,
+    background: (
+      <div className="absolute inset-0 flex items-center justify-center text-xl font-bold text-red-500">
+        🚨 SOS
+      </div>
+    ),
   },
   {
     name: "Live Location Sharing",
@@ -181,8 +188,9 @@ const features = [
     href: "#",
     cta: "Learn more",
     className: "col-span-3",
-    background: <WorldMap
-      dots={[
+    background: (
+      <WorldMap
+        dots={[
           {
             start: {
               lat: 64.2008,
@@ -214,12 +222,15 @@ const features = [
             end: { lat: -1.2921, lng: 36.8219 }, // Nairobi
           },
         ]}
-    />,
+      />
+    ),
   },
 ];
 
 export function AppleCardsCarouselDemo() {
-  const cards = data.map((card, index) => <Card key={card.src} card={card} index={index} />);
+  const cards = data.map((card, index) => (
+    <Card key={card.src} card={card} index={index} />
+  ));
 
   return (
     <div className="w-full h-full py-20">
@@ -234,13 +245,42 @@ export function AppleCardsCarouselDemo() {
 export default function Home() {
   return (
     <div className="relative min-h-screen w-full bg-background">
-    <section className="relative min-h-screen flex items-center justify-center pb-24">
-        <AnimatedGridPattern numSquares={50} maxOpacity={0.1} duration={3} repeatDelay={1} />
+      <section className="relative min-h-screen flex items-center justify-center pb-24">
+        <AnimatedGridPattern
+          numSquares={50}
+          maxOpacity={0.1}
+          duration={3}
+          repeatDelay={1}
+        />
+
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-6xl font-extrabold text-black dark:text-white">Sakhi : Smart Safety for Women</h1>
+          <h1 className="text-6xl font-extrabold text-black dark:text-white">
+            Sakhi : Smart Safety for Women
+          </h1>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            A technology-driven safety companion designed to empower women with real-time security features, community support, and legal assistance.
+            A technology-driven safety companion designed to empower women with
+            real-time security features, community support, and legal
+            assistance.
           </p>
+
+          {/* Added container for buttons directly below the paragraph */}
+          <div className="mt-8">
+            <div className="flex justify-center gap-6">
+              <Link href="/login">
+                <Button
+                  variant="outline"
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 text-lg"
+                >
+                  Login as User
+                </Button>
+              </Link>
+              <Link href="/wellwisherlogin">
+                <Button className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 text-lg">
+                  Login as Wellwisher
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -252,18 +292,28 @@ export default function Home() {
                 Your <span className="text-red-500">Safety</span>, Your Power
               </h2>
               <p className="text-lg text-gray-600">
-                The Women Safety App is an advanced platform that enhances security and confidence in public and private spaces. 
-                From emergency SOS alerts to real-time route tracking, Sakhi ensures help is always accessible.
+                The Women Safety App is an advanced platform that enhances
+                security and confidence in public and private spaces. From
+                emergency SOS alerts to real-time route tracking, Sakhi ensures
+                help is always accessible.
               </p>
               <p className="text-lg text-gray-600">
-                Join a supportive community, access legal resources, and leverage AI-powered tools to make your journey safer.
+                Join a supportive community, access legal resources, and
+                leverage AI-powered tools to make your journey safer.
               </p>
               <div className="flex gap-6">
                 <Button className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 text-lg">
                   Get Started
                 </Button>
-                <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 text-lg">
-                  <a href="https://github.com/YadlaMani/sakhi" target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 text-lg"
+                >
+                  <a
+                    href="https://github.com/YadlaMani/sakhi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     View on GitHub
                   </a>
                 </Button>
@@ -271,7 +321,11 @@ export default function Home() {
             </div>
             <div className="w-1/3 flex justify-center">
               <div className="relative w-[290px] h-[500px] bg-white shadow-2xl rounded-3xl border-8 border-black overflow-hidden">
-                <img src="/path-to-your-image.jpg" alt="Women Safety App" className="w-full h-full object-cover" />
+                <img
+                  src="/path-to-your-image.jpg"
+                  alt="Women Safety App"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
@@ -280,7 +334,9 @@ export default function Home() {
 
       <section className="py-24 bg-gray-50">
         <div className="max-w-[1400px] mx-auto px-8">
-          <h2 className="text-4xl font-bold text-center text-black mb-12">Features That Keep You Safe</h2>
+          <h2 className="text-4xl font-bold text-center text-black mb-12">
+            Features That Keep You Safe
+          </h2>
           <BentoGrid className="grid grid-cols-4 gap-6">
             {features.map((feature, idx) => (
               <BentoCard key={idx} {...feature} />
@@ -289,11 +345,13 @@ export default function Home() {
         </div>
       </section>
       <section className="py-24 bg-gray-50">
-  <div className="max-w-[1400px] mx-auto px-8">
-    <h2 className="text-4xl font-bold text-center text-black mb-12">Discover More</h2>
-    <AppleCardsCarouselDemo />
-  </div>
-</section>
+        <div className="max-w-[1400px] mx-auto px-8">
+          <h2 className="text-4xl font-bold text-center text-black mb-12">
+            Discover More
+          </h2>
+          <AppleCardsCarouselDemo />
+        </div>
+      </section>
     </div>
   );
 }
