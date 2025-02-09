@@ -31,6 +31,13 @@ export default function Page() {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      toast.message("Please login to access this page");
+      router.push("/login");
+    }
+  }, []);
+
   const fetchTravels = useCallback(async () => {
     const response = await getTravels();
     if (response.success) {
@@ -128,7 +135,8 @@ export default function Page() {
         open={!!selectedTravel && !applyDialog && !viewApplicationDialog}
         onOpenChange={(open) => {
           if (!open) setSelectedTravel(null);
-        }}>
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
@@ -173,7 +181,8 @@ export default function Page() {
         onOpenChange={(open) => {
           setApplyDialog(false);
           setSelectedTravel(null);
-        }}>
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Apply as Travel Buddy</DialogTitle>
@@ -193,7 +202,8 @@ export default function Page() {
         onOpenChange={(open) => {
           setViewApplicationDialog(open);
           if (!open) setSelectedTravel(null);
-        }}>
+        }}
+      >
         <DialogContent className="max-w-md p-6 rounded-lg shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-gray-800">
@@ -206,7 +216,8 @@ export default function Page() {
                 application.status !== "rejected" && (
                   <div
                     key={application._id}
-                    className="border rounded-lg p-4 shadow-sm bg-gray-50">
+                    className="border rounded-lg p-4 shadow-sm bg-gray-50"
+                  >
                     <p className="text-gray-700">
                       <strong className="text-gray-900">Applicant:</strong>{" "}
                       {application.applicant.username}
@@ -221,13 +232,15 @@ export default function Page() {
                           <Button
                             onClick={() =>
                               acceptApplicationStatus(application._id)
-                            }>
+                            }
+                          >
                             Accept
                           </Button>
                           <Button
                             onClick={() =>
                               rejectApplicationStatus(application._id)
-                            }>
+                            }
+                          >
                             Reject
                           </Button>
                         </>

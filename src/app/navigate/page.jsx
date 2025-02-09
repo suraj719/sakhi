@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog"; // Shadcn Dialog
 import { Input } from "@/components/ui/input"; // Shadcn Input
 import { Label } from "@/components/ui/label"; // Shadcn Label
+import { useRouter } from "next/navigation";
 
 export default function MapWithSearch() {
   const [user, setUser] = useState(null);
@@ -38,6 +39,13 @@ export default function MapWithSearch() {
   const [markType, setMarkType] = useState(null); // To store the type of mark (unsafe or danger)
   const [comment, setComment] = useState(""); // To store the comment input
   const directionsRendererRef = useRef(null);
+  const router = useRouter();
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      toast.message("Please login to access this page");
+      router.push("/login");
+    }
+  }, []);
 
   const fetchMarkings = useCallback(async () => {
     const response = await getMarkings();

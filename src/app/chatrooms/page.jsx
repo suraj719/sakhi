@@ -15,6 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 import {
   Tooltip,
   TooltipContent,
@@ -31,6 +32,14 @@ const ChatRooms = () => {
   const [user, setUser] = useState(null);
   const [roomDetails, setRoomDetails] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      toast.message("Please login to access this page");
+      router.push("/login");
+    }
+  }, []);
 
   async function fetchRooms() {
     try {
@@ -122,7 +131,8 @@ const ChatRooms = () => {
             selectedRoom === room.roomId
               ? "bg-primary/5 hover:bg-primary/10"
               : ""
-          }`}>
+          }`}
+        >
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9">
               <AvatarImage
@@ -252,11 +262,13 @@ const ChatRooms = () => {
                     key={index}
                     className={`flex ${
                       msg.sender === user?._id ? "justify-end" : "justify-start"
-                    }`}>
+                    }`}
+                  >
                     <div
                       className={`flex gap-2 max-w-[85%] sm:max-w-[70%] ${
                         msg.sender === user?._id ? "flex-row-reverse" : ""
-                      }`}>
+                      }`}
+                    >
                       <Avatar className="h-8 w-8">
                         <AvatarImage
                           src={`https://avatar.vercel.sh/${msg.sender}.png`}
@@ -269,7 +281,8 @@ const ChatRooms = () => {
                       <div
                         className={`space-y-1 ${
                           msg.sender === user?._id ? "items-end" : "items-start"
-                        }`}>
+                        }`}
+                      >
                         <p className="text-xs text-muted-foreground">
                           {msg.username}
                         </p>
@@ -278,7 +291,8 @@ const ChatRooms = () => {
                             msg.sender === user?._id
                               ? "bg-primary text-primary-foreground"
                               : "bg-muted"
-                          }`}>
+                          }`}
+                        >
                           <p className="text-sm break-words">{msg.message}</p>
                         </div>
                       </div>
@@ -291,7 +305,8 @@ const ChatRooms = () => {
             {/* Message Input */}
             <form
               onSubmit={handleSendMessage}
-              className="border-t mb-12 md:mb-5 p-4 bg-card">
+              className="border-t mb-12 md:mb-5 p-4 bg-card"
+            >
               <div className="flex gap-2">
                 <Input
                   value={newMessage}

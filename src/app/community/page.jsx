@@ -29,6 +29,7 @@ import {
   leaveCommunity,
 } from "../../../actions/communityActions";
 import { getUser } from "../../../actions/userActions";
+import { useRouter } from "next/navigation";
 
 const CommunityCard = ({ community, onJoin, onLeave, currentUser }) => {
   const isMember = community.members?.includes(currentUser?._id);
@@ -46,7 +47,8 @@ const CommunityCard = ({ community, onJoin, onLeave, currentUser }) => {
                 e.preventDefault();
                 onJoin(community._id);
               }}
-              className="border-black text-black hover:bg-black hover:text-white transition-all">
+              className="border-black text-black hover:bg-black hover:text-white transition-all"
+            >
               Join
             </Button>
           )}
@@ -58,7 +60,8 @@ const CommunityCard = ({ community, onJoin, onLeave, currentUser }) => {
                 e.preventDefault();
                 onLeave(community._id);
               }}
-              className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all">
+              className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all"
+            >
               Leave
             </Button>
           )}
@@ -95,6 +98,14 @@ export default function CommunityPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("explore");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      toast.message("Please login to access this page");
+      router.push("/login");
+    }
+  }, []);
 
   const fetchUser = useCallback(async () => {
     const response = await getUser(localStorage.getItem("token"));
@@ -191,7 +202,8 @@ export default function CommunityPage() {
             <Button
               onClick={() => setIsCreateModalOpen(true)}
               className="mt-6 bg-black text-white hover:bg-black/90 transition-colors"
-              size="lg">
+              size="lg"
+            >
               <Plus className="mr-2 h-4 w-4" />
               Create your own Community
             </Button>
@@ -206,7 +218,8 @@ export default function CommunityPage() {
               activeTab === "explore"
                 ? "bg-black text-white hover:bg-black/90"
                 : "text-black hover:bg-black/10"
-            }>
+            }
+          >
             <Compass className="mr-2 h-4 w-4" />
             Explore
           </Button>
@@ -217,7 +230,8 @@ export default function CommunityPage() {
               activeTab === "joined"
                 ? "bg-black text-white hover:bg-black/90"
                 : "text-black hover:bg-black/10"
-            }>
+            }
+          >
             <Home className="mr-2 h-4 w-4" />
             Your Communities
           </Button>
@@ -232,7 +246,8 @@ export default function CommunityPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="col-span-full text-center py-16 text-black/60">
+                className="col-span-full text-center py-16 text-black/60"
+              >
                 {activeTab === "explore"
                   ? "No communities found. Be the first to create one!"
                   : "You haven't joined any communities yet."}
@@ -243,7 +258,8 @@ export default function CommunityPage() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}>
+                    transition={{ delay: index * 0.1 }}
+                  >
                     <CommunityCard
                       community={community}
                       onJoin={handleJoinCommunity}

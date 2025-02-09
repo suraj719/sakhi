@@ -22,6 +22,13 @@ const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      toast.message("Please login to access this page");
+      router.push("/login");
+    }
+  }, []);
+
   async function fetchUser() {
     try {
       const response = await getUser(localStorage.getItem("token"));
