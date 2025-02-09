@@ -8,7 +8,7 @@ import {
 } from "../../../actions/chatRoomActions";
 import { toast } from "sonner";
 import { getUser } from "../../../actions/userActions";
-import { MessageCircle, Send, Users } from "lucide-react";
+import { MessageCircle, Send, Users, Menu, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -21,6 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const ChatRooms = () => {
   const [userRooms, setUserRooms] = useState([]);
@@ -29,6 +30,7 @@ const ChatRooms = () => {
   const [newMessage, setNewMessage] = useState("");
   const [user, setUser] = useState(null);
   const [roomDetails, setRoomDetails] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   async function fetchRooms() {
     try {
@@ -40,8 +42,12 @@ const ChatRooms = () => {
   }
 
   async function fetchRoomMessages(roomId) {
-    const response = await fetchMessages(roomId);
-    setMessages(response);
+    try {
+      const response = await fetchMessages(roomId);
+      setMessages(response);
+    } catch (error) {
+      toast.error("Failed to fetch messages");
+    }
   }
 
   async function handleSendMessage(e) {
@@ -67,8 +73,12 @@ const ChatRooms = () => {
   }
 
   async function fetchUser() {
-    const response = await getUser(localStorage.getItem("token"));
-    setUser(response.user);
+    try {
+      const response = await getUser(localStorage.getItem("token"));
+      setUser(response.user);
+    } catch (error) {
+      toast.error("Failed to fetch user");
+    }
   }
 
   async function fetchRoomDetails() {
@@ -96,10 +106,76 @@ const ChatRooms = () => {
     }
   }, [selectedRoom]);
 
+  const handleRoomSelection = (roomId) => {
+    setSelectedRoom(roomId);
+    setIsMobileMenuOpen(false);
+  };
+
+  // Render mobile menu room list
+  const RoomList = ({ onClick }) => (
+    <div className="space-y-2 pr-4">
+      {userRooms.map((room) => (
+        <button
+          key={room.roomId}
+          onClick={() => onClick(room.roomId)}
+          className={`w-full p-3 flex items-center justify-between rounded-lg transition-all duration-200 hover:bg-accent group ${
+            selectedRoom === room.roomId
+              ? "bg-primary/5 hover:bg-primary/10"
+              : ""
+          }`}>
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9">
+              <AvatarImage
+                src={`https://avatar.vercel.sh/${room.roomId}.png`}
+              />
+              <AvatarFallback>
+                {room.title.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="text-left">
+              <p className="font-medium text-sm">{room.title}</p>
+              <p className="text-xs text-muted-foreground">
+                {room.participantCount} participants
+              </p>
+            </div>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar */}
-      <div className="w-80 border-r bg-card">
+      {/* Mobile Menu Button */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-80">
+            <div className="p-4 space-y-4">
+              <div className="flex items-center mt-8 justify-between">
+                <h2 className="text-lg font-semibold flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5" />
+                  Chat Rooms
+                </h2>
+                <Badge variant="secondary" className="h-6">
+                  {userRooms.length}
+                </Badge>
+              </div>
+              <Separator />
+              <ScrollArea className="h-[calc(100vh-200px)]">
+                <RoomList onClick={handleRoomSelection} />
+              </ScrollArea>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block w-80 border-r bg-card">
         <div className="p-4 space-y-4">
           <div className="flex items-center mt-8 justify-between">
             <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -112,35 +188,7 @@ const ChatRooms = () => {
           </div>
           <Separator />
           <ScrollArea className="h-[calc(100vh-100px)]">
-            <div className="space-y-2 pr-4">
-              {userRooms.map((room) => (
-                <button
-                  key={room.roomId}
-                  onClick={() => setSelectedRoom(room.roomId)}
-                  className={`w-full p-3 flex items-center justify-between rounded-lg transition-all duration-200 hover:bg-accent group ${
-                    selectedRoom === room.roomId
-                      ? "bg-primary/5 hover:bg-primary/10"
-                      : ""
-                  }`}>
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage
-                        src={`https://avatar.vercel.sh/${room.roomId}.png`}
-                      />
-                      <AvatarFallback>
-                        {room.title.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="text-left">
-                      <p className="font-medium text-sm">{room.title}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {room.participantCount} participants
-                      </p>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
+            <RoomList onClick={setSelectedRoom} />
           </ScrollArea>
         </div>
       </div>
@@ -152,9 +200,8 @@ const ChatRooms = () => {
             {/* Chat Header */}
             <div className="border-b p-4 bg-card">
               <div className="flex items-center justify-between">
-                {/* Room Title and Participant Count */}
                 <div className="flex items-center gap-4">
-                  <h2 className="text-lg font-semibold">
+                  <h2 className="text-lg ml-10 font-semibold">
                     {roomDetails?.title || "Chat"}
                   </h2>
                   {roomDetails && (
@@ -165,10 +212,10 @@ const ChatRooms = () => {
                   )}
                 </div>
 
-                {/* Participant List with Names */}
+                {/* Participant List */}
                 {roomDetails && (
                   <TooltipProvider>
-                    <div className="flex gap-3 flex-wrap">
+                    <div className="hidden sm:flex gap-3 flex-wrap">
                       {roomDetails.participants.map((participant) => (
                         <Tooltip key={participant.userId}>
                           <TooltipTrigger>
@@ -207,7 +254,7 @@ const ChatRooms = () => {
                       msg.sender === user?._id ? "justify-end" : "justify-start"
                     }`}>
                     <div
-                      className={`flex gap-2 max-w-[70%] ${
+                      className={`flex gap-2 max-w-[85%] sm:max-w-[70%] ${
                         msg.sender === user?._id ? "flex-row-reverse" : ""
                       }`}>
                       <Avatar className="h-8 w-8">
@@ -232,7 +279,7 @@ const ChatRooms = () => {
                               ? "bg-primary text-primary-foreground"
                               : "bg-muted"
                           }`}>
-                          <p className="text-sm">{msg.message}</p>
+                          <p className="text-sm break-words">{msg.message}</p>
                         </div>
                       </div>
                     </div>
@@ -242,7 +289,9 @@ const ChatRooms = () => {
             </ScrollArea>
 
             {/* Message Input */}
-            <form onSubmit={handleSendMessage} className="border-t p-4 bg-card">
+            <form
+              onSubmit={handleSendMessage}
+              className="border-t mb-12 md:mb-5 p-4 bg-card">
               <div className="flex gap-2">
                 <Input
                   value={newMessage}
@@ -257,7 +306,7 @@ const ChatRooms = () => {
             </form>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center p-4">
             <div className="text-center space-y-2">
               <MessageCircle className="h-12 w-12 mx-auto text-muted-foreground" />
               <h3 className="font-semibold text-lg">No Chat Selected</h3>
