@@ -246,7 +246,7 @@ export function AppleCardsCarouselDemo() {
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen w-full portrait:max-w-[75vw] bg-background">
+    <div className="relative min-h-screen w-full portrait:max-w-[95vw] bg-background">
       <section className="relative min-h-screen portrait:min-h-[60vh] flex flex-wrap items-center justify-start pb-24">
         <AnimatedGridPattern
           numSquares={50}
