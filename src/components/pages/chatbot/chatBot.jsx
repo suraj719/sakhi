@@ -89,7 +89,7 @@ function ChatBot() {
           <MessageCircle size={34} />
         </Button>
       ) : (
-        <Card className="w-[400px] h-[500px] shadow-lg  animate-in slide-in-from-bottom-2">
+        <Card className="w-[400px] portrait:w-[350px] h-[500px] shadow-lg  animate-in slide-in-from-bottom-2">
           <CardHeader className="bg-primary text-primary-foreground">
             <CardTitle className="flex justify-between items-center">
               Legal Advice Chatbot

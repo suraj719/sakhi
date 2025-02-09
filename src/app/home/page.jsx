@@ -62,7 +62,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen mt-16 bg-white">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-black to-[#dc2446] text-white py-16">
+      <div className="bg-gradient-to-r rounded-lg portrait:mx-4 from-black to-[#dc2446] text-white py-16">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="space-y-4">

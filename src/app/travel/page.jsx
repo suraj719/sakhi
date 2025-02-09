@@ -105,7 +105,7 @@ export default function Page() {
   }, [fetchTravels, fetchUser]);
 
   return (
-    <div className="container flex flex-col w-full gap-5 mx-auto py-10">
+    <div className="container flex flex-col w-full gap-5 mx-auto py-10 portrait:py-0">
       <div className="flex flex-col  w-full bg-[#dc2446] p-6 shadow-md  items-start">
         <h1 className="text-4xl text-white font-bold">Travel Buddy</h1>
       </div>

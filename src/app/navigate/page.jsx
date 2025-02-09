@@ -218,7 +218,7 @@ export default function MapWithSearch() {
 
   return (
     <div className="justify-center w-full flex flex-col">
-      <div className="ms-16 mb-4 flex justify-end gap-2">
+      <div className="ms-16 portrait:ms-8 mb-4 flex justify-end gap-2">
         <Button
           className="bg-yellow-500 text-white px-4 py-2 rounded-md"
           onClick={() => handleAddMarking(1)}

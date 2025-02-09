@@ -7,7 +7,7 @@ function LegalGuide() {
   const pathname = usePathname();
   return (
     <>
-      {pathname !== "/" && pathname !== "/chatrooms" ? (
+      {pathname !== "/" && pathname !== "/chatrooms" && pathname!=="/phone" ? (
         <ChatBot />
       ) : (
         <div></div>
