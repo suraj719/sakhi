@@ -2,9 +2,18 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Grid } from "lucide-react";
+import {
+  Phone,
+  BookOpen,
+  Briefcase,
+  Shield,
+  ArrowRight,
+  Heart,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import YouTube from "react-youtube";
 
 const HomePage = () => {
@@ -19,22 +28,29 @@ const HomePage = () => {
   const gridItems = [
     {
       title: "Fake Call",
-      icon: "phone",
+      icon: Phone,
+      description: "Quick access to emergency fake calls",
       onClick: () => router.push("/phone"),
     },
     {
       title: "Scholarship Community",
-      icon: "book",
+
+      
+
+      icon: BookOpen,
+      description: "Connect with scholarship opportunities",
       onClick: () => router.push("/scholarship"),
     },
     {
       title: "Jobs Community",
-      icon: "briefcase",
+      icon: Briefcase,
+      description: "Explore career opportunities",
       onClick: () => router.push("/community/67a5442e342e84b3e961440e"),
     },
     {
       title: "NGOs & Women's Safety",
-      icon: "shield",
+      icon: Shield,
+      description: "Emergency helpline numbers",
       content: [
         { number: "1091", info: "Women Helpline (All India)" },
         { number: "181", info: "Women Helpline (Domestic Abuse)" },
@@ -46,45 +62,104 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Welcome to Sakhi</h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {gridItems.map((item, index) => (
-          <Card
-            key={index}
-            className="hover:shadow-lg transition-shadow flex flex-col items-center justify-center"
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                {item.title}
-                <Grid className="h-6 w-6" />
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {item.content ? (
-                <ul className="space-y-2">
-                  {item.content.map((subItem, subIndex) => (
-                    <li key={subIndex} className="flex justify-between">
-                      <span className="font-bold">{subItem.number}</span>
-                      <span>{subItem.info}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <Button onClick={item.onClick} className="w-full">
-                  View {item.title}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+    <div className="min-h-screen mt-16 bg-white">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-black to-[#dc2446] text-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-4">
+              <h1 className="text-5xl font-bold">Welcome to Sakhi</h1>
+              <p className="text-lg opacity-90 max-w-lg">
+                Your trusted companion for safety, opportunities, and community
+                support
+              </p>
+            </div>
+            <Heart className="h-24 w-24 text-white animate-pulse" />
+          </div>
+        </div>
       </div>
 
-      <h2 className="text-2xl font-bold mb-4">Helpful Videos</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <YouTube videoId="KVpxP3ZZtAc" className="w-full" />
-        <YouTube videoId="IDhy-AqBUmQ" className="w-full" />
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {gridItems.map((item, index) => (
+            <Card
+              key={index}
+              className="group hover:shadow-xl transition-all duration-300 border-none bg-white shadow-md hover:scale-105">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <item.icon className="h-6 w-6 text-[#dc2446]" />
+                  <CardTitle className="text-xl">{item.title}</CardTitle>
+                </div>
+                <p className="text-sm text-gray-600">{item.description}</p>
+              </CardHeader>
+              <CardContent>
+                {item.content ? (
+                  <div className="space-y-3">
+                    {item.content.map((subItem, subIndex) => (
+                      <div
+                        key={subIndex}
+                        className="flex items-center justify-between p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <Badge
+                          variant="secondary"
+                          className="text-[#dc2446] bg-white">
+                          {subItem.number}
+                        </Badge>
+                        <span className="text-sm text-gray-700">
+                          {subItem.info}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <Button
+                    onClick={item.onClick}
+                    className="w-full bg-[#dc2446] hover:bg-[#dc2446]/90 text-white group-hover:translate-x-1 transition-transform">
+                    <span>View {item.title}</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Separator className="my-12" />
+
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-3xl font-bold">Helpful Videos</h2>
+            <Badge variant="outline" className="text-[#dc2446]">
+              Educational Content
+            </Badge>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+              <YouTube
+                videoId="KVpxP3ZZtAc"
+                className="w-full"
+                opts={{
+                  width: "100%",
+                  playerVars: {
+                    autoplay: 0,
+                  },
+                }}
+              />
+            </div>
+            <div className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+              <YouTube
+                videoId="IDhy-AqBUmQ"
+                className="w-full"
+                opts={{
+                  width: "100%",
+                  playerVars: {
+                    autoplay: 0,
+                  },
+                }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
