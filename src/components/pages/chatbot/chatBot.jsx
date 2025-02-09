@@ -80,13 +80,12 @@ function ChatBot() {
   };
 
   return (
-    <div className="fixed bottom-4  right-4 z-50">
+    <div className="fixed bottom-20  right-4 z-50">
       {!isOpen ? (
         <Button
           onClick={() => setIsOpen(true)}
           size="icon"
-          className="w-16 h-16 rounded-full shadow-lg"
-        >
+          className="w-16 h-16 rounded-full shadow-lg">
           <MessageCircle size={34} />
         </Button>
       ) : (
@@ -97,8 +96,7 @@ function ChatBot() {
               <Button
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="text-primary-foreground hover:text-primary-foreground/90"
-              >
+                className="text-primary-foreground hover:text-primary-foreground/90">
                 <X size={20} />
               </Button>
             </CardTitle>
@@ -117,16 +115,14 @@ function ChatBot() {
                   className={cn(
                     "mb-4",
                     message.sender === "user" ? "text-right" : "text-left"
-                  )}
-                >
+                  )}>
                   <div
                     className={cn(
                       "inline-block p-3 rounded-lg max-w-[80%]",
                       message.sender === "user"
                         ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-secondary-foreground"
-                    )}
-                  >
+                    )}>
                     {message.sender === "user" ? (
                       <p className="whitespace-pre-wrap">{message.text}</p>
                     ) : (
@@ -172,8 +168,7 @@ function ChatBot() {
                             em: ({ node, ...props }) => (
                               <em className="italic" {...props} />
                             ),
-                          }}
-                        >
+                          }}>
                           {message.text}
                         </ReactMarkdown>
                       </div>
@@ -196,8 +191,7 @@ function ChatBot() {
                 e.preventDefault();
                 handleSendMessage();
               }}
-              className="flex w-full gap-2"
-            >
+              className="flex w-full gap-2">
               <Input
                 type="text"
                 value={input}
