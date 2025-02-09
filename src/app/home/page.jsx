@@ -35,8 +35,6 @@ const HomePage = () => {
     {
       title: "Scholarship Community",
 
-      
-
       icon: BookOpen,
       description: "Connect with scholarship opportunities",
       onClick: () => router.push("/scholarship"),
@@ -45,7 +43,7 @@ const HomePage = () => {
       title: "Jobs Community",
       icon: Briefcase,
       description: "Explore career opportunities",
-      onClick: () => router.push("/community/67a5442e342e84b3e961440e"),
+      onClick: () => router.push("/jobs"),
     },
     {
       title: "NGOs & Women's Safety",
@@ -85,7 +83,8 @@ const HomePage = () => {
           {gridItems.map((item, index) => (
             <Card
               key={index}
-              className="group hover:shadow-xl transition-all duration-300 border-none bg-white shadow-md hover:scale-105">
+              className="group hover:shadow-xl transition-all duration-300 border-none bg-white shadow-md hover:scale-105"
+            >
               <CardHeader>
                 <div className="flex items-center gap-2 mb-2">
                   <item.icon className="h-6 w-6 text-[#dc2446]" />
@@ -99,10 +98,12 @@ const HomePage = () => {
                     {item.content.map((subItem, subIndex) => (
                       <div
                         key={subIndex}
-                        className="flex items-center justify-between p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                        className="flex items-center justify-between p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                      >
                         <Badge
                           variant="secondary"
-                          className="text-[#dc2446] bg-white">
+                          className="text-[#dc2446] bg-white"
+                        >
                           {subItem.number}
                         </Badge>
                         <span className="text-sm text-gray-700">
@@ -114,7 +115,8 @@ const HomePage = () => {
                 ) : (
                   <Button
                     onClick={item.onClick}
-                    className="w-full bg-[#dc2446] hover:bg-[#dc2446]/90 text-white group-hover:translate-x-1 transition-transform">
+                    className="w-full bg-[#dc2446] hover:bg-[#dc2446]/90 text-white group-hover:translate-x-1 transition-transform"
+                  >
                     <span>View {item.title}</span>
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
