@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-full`}>
-        <div className=" hidden  md:flex z-10 fixed justify-start  shadow-lg bg-gray-50 p-2 pt-0 rounded-b-lg items-center ml-20">
+        <div className=" hidden md:flex z-10  justify-start   p-2 pt-0 rounded-b-lg items-center ml-20">
           <Image
             className=""
             src={logo}

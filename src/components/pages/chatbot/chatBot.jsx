@@ -1,9 +1,21 @@
 "use client";
-import React, { useState } from "react";
+
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, X, Send } from "lucide-react";
 import chatbot from "@/../utils/chatbot";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -68,116 +80,137 @@ function ChatBot() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4  right-4 z-50">
       {!isOpen ? (
-        <button
+        <Button
           onClick={() => setIsOpen(true)}
-          className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition-all shadow-lg">
+          size="icon"
+          className="w-16 h-16 rounded-full shadow-lg"
+        >
           <MessageCircle size={34} />
-        </button>
+        </Button>
       ) : (
-        <div className="flex flex-col h-[500px] w-[400px] bg-white shadow-lg rounded-lg overflow-hidden animate-in slide-in-from-bottom-2">
-          <div className="bg-blue-500 text-white p-4 flex justify-between items-center">
-            <h1 className="text-lg font-semibold">Legal Advice Chatbot</h1>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:text-gray-200 transition-colors">
-              <X size={20} />
-            </button>
-          </div>
-
-          <div
-            className="flex-1 p-4 overflow-y-auto bg-gray-50"
-            id="chat-container">
-            {messages.length === 0 && (
-              <div className="text-center text-gray-500 mt-4">
-                Hello! I'm your legal advice chatbot. How can I assist you
-                today?
-              </div>
-            )}
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`mb-4 ${
-                  message.sender === "user" ? "text-right" : "text-left"
-                }`}>
+        <Card className="w-[400px] h-[500px] shadow-lg  animate-in slide-in-from-bottom-2">
+          <CardHeader className="bg-primary text-primary-foreground">
+            <CardTitle className="flex justify-between items-center">
+              Legal Advice Chatbot
+              <Button
+                size="icon"
+                onClick={() => setIsOpen(false)}
+                className="text-primary-foreground hover:text-primary-foreground/90"
+              >
+                <X size={20} />
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0 h-[calc(100%-8rem)]">
+            <ScrollArea className="h-full p-4">
+              {messages.length === 0 && (
+                <p className="text-center text-muted-foreground mt-4">
+                  Hello! I'm your legal advice chatbot. How can I assist you
+                  today?
+                </p>
+              )}
+              {messages.map((message, index) => (
                 <div
-                  className={`inline-block p-3 rounded-lg max-w-[80%] ${
-                    message.sender === "user"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-800"
-                  }`}>
-                  {message.sender === "user" ? (
-                    <p className="whitespace-pre-wrap">{message.text}</p>
-                  ) : (
-                    <div className="markdown-content">
-                      <ReactMarkdown
-                        components={{
-                          h1: ({ node, ...props }) => (
-                            <h1 className="text-xl font-bold my-2" {...props} />
-                          ),
-                          h2: ({ node, ...props }) => (
-                            <h2 className="text-lg font-bold my-2" {...props} />
-                          ),
-                          h3: ({ node, ...props }) => (
-                            <h3 className="text-md font-bold my-2" {...props} />
-                          ),
-                          p: ({ node, ...props }) => (
-                            <p className="my-2" {...props} />
-                          ),
-                          ul: ({ node, ...props }) => (
-                            <ul className="list-disc ml-4 my-2" {...props} />
-                          ),
-                          ol: ({ node, ...props }) => (
-                            <ol className="list-decimal ml-4 my-2" {...props} />
-                          ),
-                          li: ({ node, ...props }) => (
-                            <li className="my-1" {...props} />
-                          ),
-                          strong: ({ node, ...props }) => (
-                            <strong className="font-bold" {...props} />
-                          ),
-                          em: ({ node, ...props }) => (
-                            <em className="italic" {...props} />
-                          ),
-                        }}>
-                        {message.text}
-                      </ReactMarkdown>
-                    </div>
+                  key={index}
+                  className={cn(
+                    "mb-4",
+                    message.sender === "user" ? "text-right" : "text-left"
                   )}
+                >
+                  <div
+                    className={cn(
+                      "inline-block p-3 rounded-lg max-w-[80%]",
+                      message.sender === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-secondary-foreground"
+                    )}
+                  >
+                    {message.sender === "user" ? (
+                      <p className="whitespace-pre-wrap">{message.text}</p>
+                    ) : (
+                      <div className="markdown-content">
+                        <ReactMarkdown
+                          components={{
+                            h1: ({ node, ...props }) => (
+                              <h1
+                                className="text-xl font-bold my-2"
+                                {...props}
+                              />
+                            ),
+                            h2: ({ node, ...props }) => (
+                              <h2
+                                className="text-lg font-bold my-2"
+                                {...props}
+                              />
+                            ),
+                            h3: ({ node, ...props }) => (
+                              <h3
+                                className="text-md font-bold my-2"
+                                {...props}
+                              />
+                            ),
+                            p: ({ node, ...props }) => (
+                              <p className="my-2" {...props} />
+                            ),
+                            ul: ({ node, ...props }) => (
+                              <ul className="list-disc ml-4 my-2" {...props} />
+                            ),
+                            ol: ({ node, ...props }) => (
+                              <ol
+                                className="list-decimal ml-4 my-2"
+                                {...props}
+                              />
+                            ),
+                            li: ({ node, ...props }) => (
+                              <li className="my-1" {...props} />
+                            ),
+                            strong: ({ node, ...props }) => (
+                              <strong className="font-bold" {...props} />
+                            ),
+                            em: ({ node, ...props }) => (
+                              <em className="italic" {...props} />
+                            ),
+                          }}
+                        >
+                          {message.text}
+                        </ReactMarkdown>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="text-left">
-                <div className="inline-block p-3 rounded-lg bg-gray-200 text-gray-800">
-                  Typing...
+              ))}
+              {isLoading && (
+                <div className="text-left">
+                  <div className="inline-block p-3 rounded-lg bg-secondary text-secondary-foreground">
+                    Typing...
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          <div className="p-4 bg-gray-100">
-            <div className="flex gap-2">
-              <input
+              )}
+            </ScrollArea>
+          </CardContent>
+          <CardFooter className="bg-background">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendMessage();
+              }}
+              className="flex w-full gap-2"
+            >
+              <Input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSendMessage();
-                }}
+                className="flex-1"
               />
-              <button
-                onClick={handleSendMessage}
-                disabled={isLoading}
-                className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300">
-                Send
-              </button>
-            </div>
-          </div>
-        </div>
+              <Button type="submit" disabled={isLoading}>
+                <Send size={18} />
+              </Button>
+            </form>
+          </CardFooter>
+        </Card>
       )}
     </div>
   );
