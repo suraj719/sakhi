@@ -12,6 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -19,6 +20,7 @@ const Profile = () => {
   const [nickname, setNickname] = useState("");
   const [passcode, setPasscode] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   async function fetchUser() {
     try {
@@ -65,7 +67,15 @@ const Profile = () => {
       toast.error("Error creating wellwisher");
     }
   };
-
+  async function logoutApp() {
+    try {
+      localStorage.removeItem("token");
+      router.push("/login");
+      toast.message("Logged out successfully");
+    } catch (err) {
+      toast.error("Error logging out");
+    }
+  }
   if (loading) return <div>Loading...</div>;
 
   if (!user) return <div>User not found</div>;
@@ -136,6 +146,9 @@ const Profile = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <div className="mt-4">
+        <Button onClick={logoutApp}>Logout</Button>
+      </div>
     </div>
   );
 };
