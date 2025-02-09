@@ -34,9 +34,12 @@ const HomePage = () => {
     },
     {
       title: "Scholarship Community",
+
+      
+
       icon: BookOpen,
       description: "Connect with scholarship opportunities",
-      onClick: () => router.push("/community/67a5442e342e84b3e961440e"),
+      onClick: () => router.push("/scholarship"),
     },
     {
       title: "Jobs Community",
