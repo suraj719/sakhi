@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 
 import { firebaseConfig } from "../../../utils/firebase";
+import { useRouter } from "next/navigation";
 
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const storage = getStorage(app);
@@ -25,7 +26,7 @@ const SOSButton = () => {
   const [user, setUser] = useState(null);
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [stream, setStream] = useState(null);
-
+  const router = useRouter();
   const startRecording = async () => {
     try {
       const res = await sendInitialTwilioSMS(
@@ -86,7 +87,7 @@ const SOSButton = () => {
             if (res.success) {
               toast.success("SOS video segment uploaded successfully!");
             } else {
-              toast.error("Failed to save recording URL");
+              toast.error(res.error);
             }
           }
         );
@@ -153,7 +154,12 @@ const SOSButton = () => {
   useEffect(() => {
     fetchUserInfo();
   }, []);
-
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      toast.message("Please login to access this page");
+      router.push("/login");
+    }
+  }, []);
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <button
