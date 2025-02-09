@@ -66,36 +66,36 @@ let notifications = [
 
 const data = [
   {
-    category: "Artificial Intelligence",
-    title: "You can do more with AI.",
-    src: "/1.jpg",
+    category: "Emergency SOS Alerts",
+    title: "Instant Alerts for Your Safety",
+    src: "/w1.png",
   },
   {
-    category: "Productivity",
-    title: "Enhance your productivity.",
-    src: "/2.jpg",
+    category: "Travel Buddy",
+    title: "Travel Safe with Trusted Companions",
+    src: "/w2.png",
   },
   {
-    category: "Product",
-    title: "Launching the new Apple Vision Pro.",
-    src: "/3.jpg",
+    category: "Community Forums",
+    title: "Join a Supportive Community",
+    src: "/w3.png",
   },
 
-  {
-    category: "Product",
-    title: "Maps for your iPhone 15 Pro Max.",
-    src: "/1.jpg",
-  },
-  {
-    category: "iOS",
-    title: "Photography just got better.",
-    src: "/2.jpg",
-  },
-  {
-    category: "Hiring",
-    title: "Hiring for a Staff Software Engineer",
-    src: "/3.jpg",
-  },
+  // {
+  //   category: "Legal Aid Chatbot",
+  //   title: "Maps for your iPhone 15 Pro Max.",
+  //   src: "/w4.png",
+  // },
+  // {
+  //   category: "iOS",
+  //   title: "Photography just got better.",
+  //   src: "/2.jpg",
+  // },
+  // {
+  //   category: "Hiring",
+  //   title: "Hiring for a Staff Software Engineer",
+  //   src: "/3.jpg",
+  // },
 ];
 
 notifications = Array.from({ length: 10 }, () => notifications).flat();
@@ -254,7 +254,7 @@ export default function Home() {
         />
 
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-6xl font-extrabold text-black dark:text-white">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-black dark:text-white">
             Sakhi : Smart Safety for Women
           </h1>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -265,7 +265,7 @@ export default function Home() {
 
           {/* Added container for buttons directly below the paragraph */}
           <div className="mt-8">
-            <div className="flex justify-center gap-6">
+            <div className="flex justify-center gap-6 flex-wrap">
               <Link href="/login">
                 <Button
                   variant="outline"
@@ -286,9 +286,9 @@ export default function Home() {
 
       <section className="py-24 bg-gray-50">
         <div className="max-w-[1400px] mx-auto px-8">
-          <div className="flex items-start gap-16">
-            <div className="w-2/3 space-y-6">
-              <h2 className="text-4xl font-bold text-black">
+          <div className="flex items-start gap-16 flex-col md:flex-row">
+            <div className="w-full md:w-2/3 space-y-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-black">
                 Your <span className="text-red-500">Safety</span>, Your Power
               </h2>
               <p className="text-lg text-gray-600">
@@ -301,7 +301,7 @@ export default function Home() {
                 Join a supportive community, access legal resources, and
                 leverage AI-powered tools to make your journey safer.
               </p>
-              <div className="flex gap-6">
+              <div className="flex gap-6 flex-wrap">
                 <Button className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 text-lg">
                   Get Started
                 </Button>
@@ -319,12 +319,12 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-            <div className="w-1/3 flex justify-center">
+            <div className="w-full md:w-1/3 flex justify-center mt-8 md:mt-0">
               <div className="relative w-[290px] h-[500px] bg-white shadow-2xl rounded-3xl border-8 border-black overflow-hidden">
                 <img
-                  src="/path-to-your-image.jpg"
+                  src="/main.png"
                   alt="Women Safety App"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover "
                 />
               </div>
             </div>
@@ -337,7 +337,7 @@ export default function Home() {
           <h2 className="text-4xl font-bold text-center text-black mb-12">
             Features That Keep You Safe
           </h2>
-          <BentoGrid className="grid grid-cols-4 gap-6">
+          <BentoGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, idx) => (
               <BentoCard key={idx} {...feature} />
             ))}
@@ -346,9 +346,7 @@ export default function Home() {
       </section>
       <section className="py-24 bg-gray-50">
         <div className="max-w-[1400px] mx-auto px-8">
-          <h2 className="text-4xl font-bold text-center text-black mb-12">
-            Discover More
-          </h2>
+          
           <AppleCardsCarouselDemo />
         </div>
       </section>
