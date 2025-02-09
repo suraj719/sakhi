@@ -74,7 +74,7 @@ export default function ScholarshipsPage() {
   };
 
   return (
-    <div className="container mx-auto p-4 mt-6">
+    <div className="container mx-auto p-4 mt-12">
       <h1 className="text-2xl font-bold mb-4">Scholarships</h1>
 
       <Dialog>
@@ -150,14 +150,12 @@ export default function ScholarshipsPage() {
                     {tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm flex items-center"
-                      >
+                        className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm flex items-center">
                         {tag}
                         <button
                           type="button"
                           onClick={() => removeTag(tag)}
-                          className="ml-1 focus:outline-none"
-                        >
+                          className="ml-1 focus:outline-none">
                           <X size={14} />
                         </button>
                       </span>
@@ -178,8 +176,7 @@ export default function ScholarshipsPage() {
           <Card
             key={scholarship._id}
             className="cursor-pointer"
-            onClick={() => setSelectedScholarship(scholarship)}
-          >
+            onClick={() => setSelectedScholarship(scholarship)}>
             <CardHeader>
               <CardTitle>{scholarship.title}</CardTitle>
               <CardDescription>
@@ -201,8 +198,7 @@ export default function ScholarshipsPage() {
       {selectedScholarship && (
         <Dialog
           open={!!selectedScholarship}
-          onOpenChange={() => setSelectedScholarship(null)}
-        >
+          onOpenChange={() => setSelectedScholarship(null)}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{selectedScholarship.title}</DialogTitle>
@@ -228,8 +224,7 @@ export default function ScholarshipsPage() {
                 <a
                   href={selectedScholarship.applyLink}
                   target="_blank"
-                  rel="noopener noreferrer"
-                >
+                  rel="noopener noreferrer">
                   Open Application
                 </a>
               </Button>

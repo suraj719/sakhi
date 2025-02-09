@@ -25,17 +25,17 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-full`}
-      >
-        <div className=" hidden md:flex z-10  justify-start   p-2 pt-0 rounded-b-lg items-center ml-20">
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-full`}>
+        <div className=" hidden md:flex z-10 fixed justify-start   p-2 pt-0 rounded-b-lg items-center ml-20">
+
           <Image
             className=""
             src={logo}
             alt="Sakhi Logo"
-            width={80}
-            height={80}
+            width={70}
+            height={70}
           />
-          <p className="text-3xl font-bold logo-font">Sakhi</p>
+          <p className="text-2xl font-bold logo-font">Sakhi</p>
         </div>
         <div className="h-full w-full flex flex-row">
           <Navbar />
