@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function FakeCallScreen() {
-  const [screen, setScreen] = useState("input"); // 'input', 'incoming', 'active'
+  const [screen, setScreen] = useState("input");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("Male");
@@ -64,7 +64,7 @@ export default function FakeCallScreen() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="flex items-center justify-center h-screen ">
       {screen === "input" && (
         <Card className="w-[320px]">
           <CardHeader>
@@ -90,15 +90,13 @@ export default function FakeCallScreen() {
                 <Button
                   variant={gender === "Male" ? "default" : "outline"}
                   onClick={() => setGender("Male")}
-                  className="flex-1"
-                >
+                  className="flex-1">
                   Male
                 </Button>
                 <Button
                   variant={gender === "Female" ? "default" : "outline"}
                   onClick={() => setGender("Female")}
-                  className="flex-1"
-                >
+                  className="flex-1">
                   Female
                 </Button>
               </div>
@@ -123,26 +121,25 @@ export default function FakeCallScreen() {
             <motion.div
               className="flex justify-around w-full"
               animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-            >
+              transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}>
               <Button
                 variant="destructive"
                 size="icon"
                 className="rounded-full h-16 w-16"
-                onClick={() => setScreen("input")}
-              >
+                onClick={() => setScreen("input")}>
                 <PhoneOff size={32} />
               </Button>
               <motion.div
                 animate={{ scale: [1, 1.1, 1] }}
-                transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.2 }}
-              >
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  duration: 1.2,
+                }}>
                 <Button
                   variant="default"
                   size="icon"
                   className="rounded-full h-16 w-16 bg-green-600 hover:bg-green-700"
-                  onClick={() => setScreen("active")}
-                >
+                  onClick={() => setScreen("active")}>
                   <PhoneCall size={32} />
                 </Button>
               </motion.div>
@@ -189,8 +186,7 @@ export default function FakeCallScreen() {
               variant="destructive"
               size="icon"
               className="rounded-full h-16 w-16 mt-4"
-              onClick={() => setScreen("input")}
-            >
+              onClick={() => setScreen("input")}>
               <PhoneOff size={32} />
             </Button>
           </CardContent>

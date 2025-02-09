@@ -9,7 +9,7 @@ The Women Safety App is an innovative solution designed to enhance security and 
 * [X] Finding someone safe to travel with and bridge those communication gaps with chat rooms
 
 #### 🏠 Secure Places Marking
-* [ ] Users can mark and rate locations based on security levels, aiding informed decision-making.
+* [X] Users can mark and rate locations based on security levels, aiding informed decision-making.
 
 #### 👥 Community Forums
 * [X] A platform for women to share experiences, seek advice, and build a support network.
@@ -29,16 +29,16 @@ The Women Safety App is an innovative solution designed to enhance security and 
 
 #### 🚨 Emergency SOS Alerts
 * [ ] Triggered by shaking the device, voice commands, or button presses.
-* [ ] Sends alerts, live location, and audio/video recordings to trusted contacts and authorities.
+* [X] Sends alerts, live location, and audio/video recordings to trusted contacts and authorities.
 
 #### 📞 Fake Calls
 * [X] Simulates incoming calls with pre-recorded messages to help users escape uncomfortable situations.
 
 #### 🏢 NGO Connectivity
-* [ ] Links users to organizations offering legal aid, mental health support, and other assistance.
+* [X] Links users to organizations offering legal aid, mental health support, and other assistance.
 
 #### 🎓 Scholarship & Opportunity Portal
-* [ ] Curates educational and professional growth resources specifically for women.
+* [X] Curates educational and professional growth resources specifically for women.
 
 #### 🔴 One-Touch Safety Mode
 * [X] Activates a suite of security measures, including live recording, location sharing, and alerts to trusted contacts.

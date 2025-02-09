@@ -31,6 +31,11 @@ export async function saveSOSRecording(token, recordingUrl) {
         from: "+16073604815",
         body: `Current location is:https://maps.google.com/?q=${user.currentLocation.lat},${user.currentLocation.log}.Current recording URL: ${recordingUrl}`,
       };
+      let msg3 = {
+        to: "++919030989001",
+        from: "+16073604815",
+        body: `Current location is:https://maps.google.com/?q=${user.currentLocation.lat},${user.currentLocation.log}.Current recording URL: ${recordingUrl}`,
+      };
       try {
         const response1 = await twilioClient.messages.create(msg1);
         const response2 = await twilioClient.messages.create(msg2);
@@ -69,9 +74,16 @@ export async function sendInitialTwilioSMS(username, lat, log) {
       from: "+16073604815",
       body: `SOS Alert! ${username} has triggered an SOS alert. Please check on them immediately. Current location is:https://maps.google.com/?q=${lat},${log}`,
     };
+    let msg3 = {
+      to: "++919392130068",
+      from: "+16073604815",
+      body: `SOS Alert! ${username} has triggered an SOS alert. Please check on them immediately. Current location is:https://maps.google.com/?q=${lat},${log}`,
+    };
+
     try {
       const response1 = await twilioClient.messages.create(msg1);
       const response2 = await twilioClient.messages.create(msg2);
+      const response3 = await twilioClient.messages.create(msg3);
       return { success: true };
     } catch (err) {
       return {

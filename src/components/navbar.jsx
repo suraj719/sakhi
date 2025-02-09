@@ -20,8 +20,7 @@ function Navbar() {
         <div
           className="navbar h-[100%] ml-2 z-10 fixed flex flex-col justify-center"
           onMouseEnter={() => setIsVisible(true)}
-          onMouseLeave={() => setIsVisible(false)}
-        >
+          onMouseLeave={() => setIsVisible(false)}>
           {/* Hover trigger area - only visible on md and larger screens */}
           <div className="hidden md:block fixed left-0 top-0 w-2 h-full bg-transparent z-10" />
 
@@ -34,8 +33,7 @@ function Navbar() {
         md:transition-transform md:duration-300 md:ease-in-out
         ${isVisible ? "md:translate-x-0" : "md:translate-x-[-95%]"}
 
-      `}
-          >
+      `}>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
               <Link href="/home">
                 <FaHome className="mx-auto text-2xl" />
