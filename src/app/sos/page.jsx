@@ -58,12 +58,12 @@ const SOSButton = () => {
       const saveRecording = async () => {
         if (chunks.length === 0) return;
 
-        const videoBlob = new Blob(chunks, { type: "video/webm" });
+        const videoBlob = new Blob(chunks, { type: "video/mp4" });
         const videoFile = new File([videoBlob], `sos_${Date.now()}.webm`);
 
         const filePath = `sos_videos/${
           user?.username
-        }_${Date.now()}_sos_part.webm`;
+        }_${Date.now()}_sos_part.mp4`;
         const storageRef = ref(storage, filePath);
         const uploadTask = uploadBytesResumable(storageRef, videoFile);
 
