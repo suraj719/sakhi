@@ -18,7 +18,7 @@ function Navbar() {
     <>
       {pathname !== "/" && (
         <div
-          className="navbar h-[100%] ml-2 z-10 fixed flex flex-col "
+          className="navbar h-[100%] ml-2 z-10 fixed flex flex-col justify-center"
           onMouseEnter={() => setIsVisible(true)}
           onMouseLeave={() => setIsVisible(false)}>
           {/* Hover trigger area - only visible on md and larger screens */}

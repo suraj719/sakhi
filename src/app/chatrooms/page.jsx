@@ -101,7 +101,7 @@ const ChatRooms = () => {
       {/* Sidebar */}
       <div className="w-80 border-r bg-card">
         <div className="p-4 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center mt-8 justify-between">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <MessageCircle className="w-5 h-5" />
               Chat Rooms
@@ -121,8 +121,7 @@ const ChatRooms = () => {
                     selectedRoom === room.roomId
                       ? "bg-primary/5 hover:bg-primary/10"
                       : ""
-                  }`}
-                >
+                  }`}>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-9 w-9">
                       <AvatarImage
@@ -206,13 +205,11 @@ const ChatRooms = () => {
                     key={index}
                     className={`flex ${
                       msg.sender === user?._id ? "justify-end" : "justify-start"
-                    }`}
-                  >
+                    }`}>
                     <div
                       className={`flex gap-2 max-w-[70%] ${
                         msg.sender === user?._id ? "flex-row-reverse" : ""
-                      }`}
-                    >
+                      }`}>
                       <Avatar className="h-8 w-8">
                         <AvatarImage
                           src={`https://avatar.vercel.sh/${msg.sender}.png`}
@@ -225,8 +222,7 @@ const ChatRooms = () => {
                       <div
                         className={`space-y-1 ${
                           msg.sender === user?._id ? "items-end" : "items-start"
-                        }`}
-                      >
+                        }`}>
                         <p className="text-xs text-muted-foreground">
                           {msg.username}
                         </p>
@@ -235,8 +231,7 @@ const ChatRooms = () => {
                             msg.sender === user?._id
                               ? "bg-primary text-primary-foreground"
                               : "bg-muted"
-                          }`}
-                        >
+                          }`}>
                           <p className="text-sm">{msg.message}</p>
                         </div>
                       </div>

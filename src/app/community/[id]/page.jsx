@@ -171,7 +171,6 @@ function CommunityPage() {
         ) : (
           <Card className="bg-white">
             <CardContent className="flex flex-col items-center justify-center p-12">
-              <Plus className="h-12 w-12 text-[#dc2446] mb-4" />
               <p className="text-lg text-gray-500">
                 No posts in this community yet. Be the first to create one!
               </p>
