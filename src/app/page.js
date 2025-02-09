@@ -81,11 +81,11 @@ const data = [
     src: "/w3.png",
   },
 
-  // {
-  //   category: "Legal Aid Chatbot",
-  //   title: "Maps for your iPhone 15 Pro Max.",
-  //   src: "/w4.png",
-  // },
+  {
+    category: "Legal Aid Chatbot",
+    title: "Get instant legal advice and support",
+    src: "/w4.png",
+  },
   // {
   //   category: "iOS",
   //   title: "Photography just got better.",
@@ -159,9 +159,9 @@ const features = [
     description: "Get notified when something happens.",
     href: "#",
     cta: "Learn more",
-    className: "col-span-2",
+    className: "col-span-2 portrait:hidden",
     background: (
-      <div className="absolute right-2 top-4 h-[300px] w-full overflow-hidden transition-all duration-300 ease-out">
+      <div className="absolute portrait:hidden right-2 top-4 h-[300px] w-full overflow-hidden transition-all duration-300 ease-out">
         <AnimatedList>
           {notifications.map((item, idx) => (
             <Notification {...item} key={idx} />
@@ -175,7 +175,7 @@ const features = [
     description: "Instantly send alerts to emergency contacts.",
     href: "#",
     cta: "Learn more",
-    className: "col-span-1 ",
+    className: "col-span-1 portrait:col-span-2",
     background: (
       <div className="absolute inset-0 flex items-center justify-center text-xl font-bold text-red-500">
         🚨 SOS
@@ -234,18 +234,20 @@ export function AppleCardsCarouselDemo() {
 
   return (
     <div className="w-full h-full py-20">
-      <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+      <h2 className="max-w-7xl text-center portrait:max-w-[90vw] pl-8 text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
         Discover More
       </h2>
-      <Carousel items={cards} />
+      <div className="landscape:-ms-12">
+        <Carousel items={cards} />
+      </div>
     </div>
   );
 }
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen w-full bg-background">
-      <section className="relative min-h-screen flex items-center justify-center pb-24">
+    <div className="relative min-h-screen w-full portrait:max-w-[75vw] bg-background">
+      <section className="relative min-h-screen portrait:min-h-[60vh] flex flex-wrap items-center justify-start pb-24">
         <AnimatedGridPattern
           numSquares={50}
           maxOpacity={0.1}
@@ -285,8 +287,8 @@ export default function Home() {
       </section>
 
       <section className="py-24 bg-gray-50">
-        <div className="max-w-[1400px] mx-auto px-8">
-          <div className="flex items-start gap-16 flex-col md:flex-row">
+        <div className="max-w-[1400px mx-auto px-8">
+          <div className="flex portrait:flex-wrap items-start gap-16 flex-col md:flex-row">
             <div className="w-full md:w-2/3 space-y-6">
               <h2 className="text-3xl md:text-4xl font-bold text-black">
                 Your <span className="text-red-500">Safety</span>, Your Power
@@ -320,7 +322,7 @@ export default function Home() {
               </div>
             </div>
             <div className="w-full md:w-1/3 flex justify-center mt-8 md:mt-0">
-              <div className="relative w-[290px] h-[500px] bg-white shadow-2xl rounded-3xl border-8 border-black overflow-hidden">
+              <div className="relative w-[290px] h-[300px] bg-white shadow-2xl rounded-3xl border-8 border-black overflow-hidden">
                 <img
                   src="/main.png"
                   alt="Women Safety App"
@@ -332,8 +334,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-[1400px] mx-auto px-8">
+      <section className="py-24 pb-4 bg-gray-50">
+        <div className=" mx-auto px-8">
           <h2 className="text-4xl font-bold text-center text-black mb-12">
             Features That Keep You Safe
           </h2>
@@ -344,8 +346,8 @@ export default function Home() {
           </BentoGrid>
         </div>
       </section>
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-[1400px] mx-auto px-8">
+      <section className="py-4 bg-gray-50">
+        <div className=" mx-auto px-">
           
           <AppleCardsCarouselDemo />
         </div>
