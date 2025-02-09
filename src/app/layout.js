@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Sakhi",
   description: "Tech-Powered Security & Empowerment",
+  manifest :"/manifest.json",
 };
 
 export default function RootLayout({ children }) {
