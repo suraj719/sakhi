@@ -167,19 +167,19 @@ export default function FakeCallScreen() {
             </div>
 
             <div className="grid grid-cols-2 gap-6 w-full mt-4">
-              <Button variant="ghost" className="flex flex-col items-center">
+              <Button className="flex flex-col items-center">
                 <MicOff size={32} />
                 <p className="text-sm mt-1">Mute</p>
               </Button>
-              <Button variant="ghost" className="flex flex-col items-center">
+              <Button className="flex flex-col items-center">
                 <Volume2 size={32} />
                 <p className="text-sm mt-1">Speaker</p>
               </Button>
-              <Button variant="ghost" className="flex flex-col items-center">
+              <Button className="flex flex-col items-center">
                 <IoKeypad size={32} />
                 <p className="text-sm mt-1">Keypad</p>
               </Button>
-              <Button variant="ghost" className="flex flex-col items-center">
+              <Button className="flex flex-col items-center">
                 <MoreVertical size={32} />
                 <p className="text-sm mt-1">Options</p>
               </Button>
