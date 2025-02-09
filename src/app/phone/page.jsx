@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function FakeCallScreen() {
-  const [screen, setScreen] = useState("input"); // 'input', 'incoming', 'active'
+  const [screen, setScreen] = useState("input");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("Male");
