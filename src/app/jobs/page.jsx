@@ -30,7 +30,7 @@ export default function JobsPage() {
         </CardContent>
         <CardFooter>
           <Link href={job.apply_link} className="w-full" target="_blank">
-            <Button className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white">
+            <Button className="w-full bg-[#dc2446]  text-white">
               Apply Now
             </Button>
           </Link>
@@ -136,7 +136,7 @@ export default function JobsPage() {
 
   return (
     <div className="mt-8">
-      <header className="bg-gradient-to-r from-pink-500 to-red-500 p-6 shadow-md">
+      <header className="bg-[#dc2446] p-6 shadow-md">
         <h1 className="text-3xl font-bold text-white">Empowering Careers</h1>
       </header>
       <main className="container mx-auto px-4 py-8">
