@@ -257,7 +257,7 @@ export default function Home() {
 
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold text-black dark:text-white">
-            Sakhi : Smart Safety for Women
+            Sakhi : True independence starts with safety
           </h1>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             A technology-driven safety companion designed to empower women with

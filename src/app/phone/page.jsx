@@ -63,8 +63,33 @@ export default function FakeCallScreen() {
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
+  const enterFullScreen = () => {
+    const element = document.documentElement;
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  };
+
+  const exitFullScreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center h-[90vh] ">
+    <div className="flex items-center justify-center h-[90vh]">
       {screen === "input" && (
         <Card className="w-[320px]">
           <CardHeader>
@@ -102,7 +127,13 @@ export default function FakeCallScreen() {
                   Female
                 </Button>
               </div>
-              <Button className="w-full" onClick={() => setScreen("incoming")}>
+              <Button
+                className="w-full"
+                onClick={() => {
+                  setScreen("incoming");
+                  enterFullScreen();
+                }}
+              >
                 Create Call
               </Button>
             </div>
@@ -129,7 +160,10 @@ export default function FakeCallScreen() {
                 variant="destructive"
                 size="icon"
                 className="rounded-full h-16 w-16"
-                onClick={() => setScreen("input")}
+                onClick={() => {
+                  setScreen("input");
+                  exitFullScreen();
+                }}
               >
                 <PhoneOff size={32} />
               </Button>
@@ -192,7 +226,10 @@ export default function FakeCallScreen() {
               variant="destructive"
               size="icon"
               className="rounded-full h-16 w-16 mt-4"
-              onClick={() => setScreen("input")}
+              onClick={() => {
+                setScreen("input");
+                exitFullScreen();
+              }}
             >
               <PhoneOff size={32} />
             </Button>
