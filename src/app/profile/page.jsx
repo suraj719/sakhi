@@ -74,6 +74,7 @@ const Profile = () => {
       toast.error("Error creating wellwisher");
     }
   };
+
   async function logoutApp() {
     try {
       localStorage.removeItem("token");
@@ -83,78 +84,124 @@ const Profile = () => {
       toast.error("Error logging out");
     }
   }
-  if (loading) return <div>Loading...</div>;
 
-  if (!user) return <div>User not found</div>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+
+  if (!user)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">User not found</div>
+      </div>
+    );
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">User Profile</h2>
-      <p>
-        <strong>Username:</strong> {user.username}
-      </p>
-      <p>
-        <strong>Email:</strong> {user.email}
-      </p>
-      <p>
-        <strong>Phone No:</strong> {user.phoneNo}
-      </p>
-      <p>
-        <strong>Message Rooms:</strong> {user.messageRooms.length}
-      </p>
+    <div className="min-h-screen  p-8">
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Header Section */}
+        <div className="border-b border-red-600/20 pb-6">
+          <h2 className="text-3xl font-bold">User Profile</h2>
+        </div>
 
-      {/* Wellwishers List */}
-      <div className="mt-4">
-        <h3 className="text-xl font-semibold">Wellwishers</h3>
-        {user.wellwishers && user.wellwishers.length > 0 ? (
-          <ul className="list-disc pl-5">
-            {user.wellwishers.map((wellwisher, index) => (
-              <li key={index}>
-                <strong>{wellwisher.nickname}</strong> - {wellwisher.passcode}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No wellwishers added yet.</p>
-        )}
-      </div>
-
-      {/* Add Wellwisher Dialog */}
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button
-            onClick={(e) => {
-              setIsOpen(true);
-              generatePasscode();
-            }}
-            className="mt-4"
-          >
-            Add Wellwisher
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add a Wellwisher</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Input
-              type="text"
-              placeholder="Enter nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
-            <p>
-              <strong>Generated Passcode:</strong>{" "}
-              {passcode || "Click to generate"}
-            </p>
+        {/* User Info Section */}
+        <div className="border border-zinc-800 rounded-lg p-6  backdrop-blur">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2 border-r border-zinc-800 pr-4">
+              <p className="text-zinc-400">Username</p>
+              <p className="font-semibold">{user.username}</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-zinc-400">Email</p>
+              <p className="font-semibold">{user.email}</p>
+            </div>
+            <div className="space-y-2 border-r border-zinc-800 pr-4">
+              <p className="text-zinc-400">Phone No</p>
+              <p className="font-semibold">{user.phoneNo}</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-zinc-400">Message Rooms</p>
+              <p className="font-semibold">{user.messageRooms.length}</p>
+            </div>
           </div>
-          <DialogFooter>
-            <Button onClick={handleCreateWellWisher}>Create Wellwisher</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <div className="mt-4">
-        <Button onClick={logoutApp}>Logout</Button>
+        </div>
+
+        {/* Wellwishers Section */}
+        <div className="border border-zinc-800 rounded-lg p-6  backdrop-blur">
+          <div className="flex justify-between items-center mb-6 border-b border-zinc-800 pb-4">
+            <h3 className="text-xl font-semibold">Wellwishers</h3>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  onClick={(e) => {
+                    setIsOpen(true);
+                    generatePasscode();
+                  }}
+                  className="bg-black text-white hover:bg-black/90">
+                  Add Wellwisher
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="border border-red-600/20 ">
+                <DialogHeader>
+                  <DialogTitle>Add a Wellwisher</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input
+                    type="text"
+                    placeholder="Enter nickname"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    className="border-zinc-700"
+                  />
+                  <p>
+                    <span className="text-zinc-400">Generated Passcode:</span>{" "}
+                    <span className="text-red-500 font-mono">
+                      {passcode || "Click to generate"}
+                    </span>
+                  </p>
+                </div>
+                <DialogFooter>
+                  <Button
+                    onClick={handleCreateWellWisher}
+                    className="bg-red-600 hover:bg-red-700">
+                    Create Wellwisher
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {user.wellwishers && user.wellwishers.length > 0 ? (
+            <div className="space-y-3">
+              {user.wellwishers.map((wellwisher, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center p-4 border border-zinc-800/50 rounded-lg hover:border-zinc-700 transition-colors">
+                  <span className="font-semibold">{wellwisher.nickname}</span>
+                  <span className="text-red-500 font-mono">
+                    {wellwisher.passcode}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-zinc-400 text-center py-8 border border-dashed border-zinc-800 rounded-lg">
+              No wellwishers added yet.
+            </p>
+          )}
+        </div>
+
+        {/* Logout Section */}
+        <div className="flex justify-endpt-4">
+          <Button
+            onClick={logoutApp}
+            className="bg-[#dd0000]  mb-24  hover:bg-[#cc0000]">
+            Logout
+          </Button>
+        </div>
       </div>
     </div>
   );
