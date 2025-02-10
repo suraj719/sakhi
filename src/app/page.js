@@ -107,13 +107,11 @@ const Notification = ({ name, description, icon, color, time }) => {
         "relative mx-auto min-h-fit w-full max-w-[400px] cursor-pointer overflow-hidden rounded-2xl p-4",
         "transition-all duration-200 ease-in-out hover:scale-[103%]",
         "bg-white shadow-lg dark:bg-transparent dark:backdrop-blur-md dark:border dark:border-gray-600"
-      )}
-    >
+      )}>
       <div className="flex flex-row items-center gap-3">
         <div
           className="flex size-10 items-center justify-center rounded-2xl"
-          style={{ backgroundColor: color }}
-        >
+          style={{ backgroundColor: color }}>
           <span className="text-lg">{icon}</span>
         </div>
         <div className="flex flex-col overflow-hidden">
@@ -143,8 +141,7 @@ const features = [
         {files.map((f, idx) => (
           <figure
             key={idx}
-            className="relative w-40 overflow-hidden rounded-xl border p-4"
-          >
+            className="relative w-40 overflow-hidden rounded-xl border p-4">
             <figcaption className="text-sm font-medium dark:text-white">
               {f.name}
             </figcaption>
@@ -246,7 +243,7 @@ export function AppleCardsCarouselDemo() {
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen w-full portrait:max-w-[95vw] bg-background">
+    <div className="relative  md:mt-0 min-h-screen w-full portrait:max-w-[95vw] bg-background">
       <section className="relative min-h-screen portrait:min-h-[60vh] flex flex-wrap items-center justify-start pb-24">
         <AnimatedGridPattern
           numSquares={50}
@@ -255,7 +252,7 @@ export default function Home() {
           repeatDelay={1}
         />
 
-        <div className="container mx-auto px-4 relative z-10 text-center">
+        <div className="container mt-16 md:mt-0  mx-auto px-4 relative z-10 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold text-black dark:text-white">
             Sakhi : True independence starts with safety
           </h1>
@@ -271,8 +268,7 @@ export default function Home() {
               <Link href="/login">
                 <Button
                   variant="outline"
-                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 text-lg"
-                >
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 text-lg">
                   Login as User
                 </Button>
               </Link>
@@ -309,13 +305,11 @@ export default function Home() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 text-lg"
-                >
+                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 text-lg">
                   <a
                     href="https://github.com/YadlaMani/sakhi"
                     target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                    rel="noopener noreferrer">
                     View on GitHub
                   </a>
                 </Button>
@@ -348,7 +342,6 @@ export default function Home() {
       </section>
       <section className="py-4 bg-gray-50">
         <div className=" mx-auto px-">
-          
           <AppleCardsCarouselDemo />
         </div>
       </section>
