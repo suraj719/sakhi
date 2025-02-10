@@ -117,9 +117,8 @@ export default function SignupForm() {
           </div>
           <Button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md"
-            disabled={isLoading}
-          >
+            className="w-full bg-[#dc2446] hover:bg-[#bd2a45] text-white py-2 rounded-lg shadow-md"
+            disabled={isLoading}>
             {isLoading ? "Creating account..." : "Sign up"}
           </Button>
         </form>
@@ -127,7 +126,7 @@ export default function SignupForm() {
           <span className="text-gray-600 dark:text-gray-400">
             Already have an account?
           </span>{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <a href="/login" className="text-[#dc2446] hover:underline">
             Log in
           </a>
         </div>

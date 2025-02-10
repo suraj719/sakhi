@@ -109,8 +109,7 @@ export default function LoginForm() {
           <div className="space-y-4">
             <Select
               onValueChange={handleTypeChange}
-              defaultValue={formData.type}
-            >
+              defaultValue={formData.type}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select login type" />
               </SelectTrigger>
@@ -153,9 +152,8 @@ export default function LoginForm() {
           </div>
           <Button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md"
-            disabled={isLoading}
-          >
+            className="w-full bg-[#dc2446] hover:bg-[#bd2a45] text-white py-2 rounded-lg shadow-md"
+            disabled={isLoading}>
             {isLoading ? "Logging in..." : "Sign in"}
           </Button>
         </form>

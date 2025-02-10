@@ -106,9 +106,8 @@ export default function WellwisherSignupForm() {
           </div>
           <Button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md"
-            disabled={isLoading}
-          >
+            className="w-full bg-[#dc2446] hover:bg-[#bd2a45] text-white py-2 rounded-lg shadow-md"
+            disabled={isLoading}>
             {isLoading ? "Logging inn" : "Login in "}
           </Button>
         </form>
