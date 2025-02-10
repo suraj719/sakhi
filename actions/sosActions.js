@@ -23,17 +23,17 @@ export async function saveSOSRecording(token, recordingUrl) {
       );
       let msg1 = {
         to: "++917032038148",
-        from: "+16073604815",
+        from: "+18317039533",
         body: `Current location is:https://maps.google.com/?q=${user.currentLocation.lat},${user.currentLocation.lng}.Current recording URL: ${recordingUrl}`,
       };
       let msg2 = {
         to: "++919392130068",
-        from: "+16073604815",
+        from: "+18317039533",
         body: `Current location is:https://maps.google.com/?q=${user.currentLocation.lat},${user.currentLocation.log}.Current recording URL: ${recordingUrl}`,
       };
       let msg3 = {
         to: "++919030989001",
-        from: "+16073604815",
+        from: "+18317039533",
         body: `Current location is:https://maps.google.com/?q=${user.currentLocation.lat},${user.currentLocation.log}.Current recording URL: ${recordingUrl}`,
       };
       try {
@@ -66,17 +66,17 @@ export async function sendInitialTwilioSMS(username, lat, log) {
     );
     let msg1 = {
       to: "++917032038148",
-      from: "+16073604815",
+      from: "+18317039533",
       body: `SOS Alert! ${username} has triggered an SOS alert. Please check on them immediately. Current location is:https://maps.google.com/?q=${lat},${log}`,
     };
     let msg2 = {
       to: "++919392130068",
-      from: "+16073604815",
+      from: "+18317039533",
       body: `SOS Alert! ${username} has triggered an SOS alert. Please check on them immediately. Current location is:https://maps.google.com/?q=${lat},${log}`,
     };
     let msg3 = {
       to: "++919392130068",
-      from: "+16073604815",
+      from: "+18317039533",
       body: `SOS Alert! ${username} has triggered an SOS alert. Please check on them immediately. Current location is:https://maps.google.com/?q=${lat},${log}`,
     };
 
