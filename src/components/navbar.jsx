@@ -21,10 +21,8 @@ function Navbar() {
           className="navbar h-[100%] ml-2 z-10 fixed flex flex-col justify-center"
           onMouseEnter={() => setIsVisible(true)}
           onMouseLeave={() => setIsVisible(false)}>
-          {/* Hover trigger area - only visible on md and larger screens */}
           <div className="hidden md:block fixed left-0 top-0 w-2 h-full bg-transparent z-10" />
 
-          {/* Actual navbar with transition */}
           <div
             className={`
         flex md:flex-col md:rounded-lg shadow-black shadow-xl justify-around 
@@ -34,19 +32,38 @@ function Navbar() {
         ${isVisible ? "md:translate-x-0" : "md:translate-x-[-95%]"}
 
       `}>
-            <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
+            <div
+              className={`w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4 `}>
               <Link href="/home">
-                <FaHome className="mx-auto text-2xl" />
+                <FaHome
+                  className={`mx-auto  ${
+                    pathname === "/home"
+                      ? "bg-white text-5xl rounded-md mx-auto md:h-[50%] p-2 text-[#dc2446]"
+                      : "text-3xl"
+                  }`}
+                />
               </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
               <Link href="/travel">
-                <FaPlane className="mx-auto text-2xl" />
+                <FaPlane
+                  className={`mx-auto  ${
+                    pathname === "/travel"
+                      ? "bg-white text-5xl rounded-md mx-auto md:h-[50%] p-2 text-[#dc2446]"
+                      : "text-3xl"
+                  }`}
+                />
               </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
               <Link href="/navigate">
-                <FaMapMarkerAlt className="mx-auto text-2xl" />
+                <FaMapMarkerAlt
+                  className={`mx-auto  ${
+                    pathname === "/navigate"
+                      ? "bg-white text-5xl rounded-md mx-auto md:h-[50%] p-2 text-[#dc2446]"
+                      : "text-3xl"
+                  }`}
+                />
               </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left flex items-center md:flex-row md:gap-4">
@@ -56,17 +73,35 @@ function Navbar() {
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
               <Link href="/chatrooms">
-                <IoLogoWechat className="mx-auto text-4xl" />
+                <IoLogoWechat
+                  className={`mx-auto  ${
+                    pathname === "/chatrooms"
+                      ? "bg-white text-5xl rounded-md mx-auto md:h-[50%] p-2 text-[#dc2446]"
+                      : "text-3xl"
+                  }`}
+                />
               </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
               <Link href="/community">
-                <FaUsers className="mx-auto text-3xl" />
+                <FaUsers
+                  className={`mx-auto ${
+                    pathname === "/community"
+                      ? "bg-white text-5xl  rounded-md mx-auto md:h-[50%] p-2 text-[#dc2446]"
+                      : "text-3xl "
+                  }`}
+                />
               </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
               <Link href="/profile">
-                <FaUser className="mx-auto text-2xl" />
+                <FaUser
+                  className={`mx-auto  ${
+                    pathname === "/profile"
+                      ? "bg-white text-5xl rounded-md mx-auto md:h-[50%] p-2 text-[#dc2446]"
+                      : "text-3xl"
+                  }`}
+                />
               </Link>
             </div>
           </div>
