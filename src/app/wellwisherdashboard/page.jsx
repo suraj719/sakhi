@@ -144,7 +144,7 @@ const Page = () => {
   }, [userLocation, location]);
 
   return (
-    <div className="flex justify-center gap-4 items-center min-h-screen">
+    <div className="flex flex-wrap justify-center gap-4 items-center min-h-screen portrait:max-h-[50vh]">
       {loading ? (
         <Loader2 className="w-6 h-6 animate-spin" />
       ) : (
@@ -188,7 +188,8 @@ const Page = () => {
                       <Button onClick={handleEditEmail}>Save</Button>
                       <Button
                         variant="outline"
-                        onClick={() => setEditEmail(false)}>
+                        onClick={() => setEditEmail(false)}
+                      >
                         Cancel
                       </Button>
                     </div>
@@ -197,7 +198,8 @@ const Page = () => {
                       <span>{email || "Not provided"}</span>
                       <Button
                         variant="outline"
-                        onClick={() => setEditEmail(true)}>
+                        onClick={() => setEditEmail(true)}
+                      >
                         Edit
                       </Button>
                     </div>
@@ -216,7 +218,8 @@ const Page = () => {
                       <Button onClick={handleEditPhoneNo}>Save</Button>
                       <Button
                         variant="outline"
-                        onClick={() => setEditPhone(false)}>
+                        onClick={() => setEditPhone(false)}
+                      >
                         Cancel
                       </Button>
                     </div>
@@ -225,7 +228,8 @@ const Page = () => {
                       <span>{phoneNo || "Not provided"}</span>
                       <Button
                         variant="outline"
-                        onClick={() => setEditPhone(true)}>
+                        onClick={() => setEditPhone(true)}
+                      >
                         Edit
                       </Button>
                     </div>
@@ -236,7 +240,7 @@ const Page = () => {
           </CardContent>
         </Card>
       )}
-      <div className="rounded-lg">
+      <div className="rounded-lg portrait:mb-8 portrait:-mt-14">
         {location && (
           <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY}>
             <Map
@@ -244,7 +248,8 @@ const Page = () => {
               defaultCenter={{ lat: location.lat, lng: location.lng }}
               defaultZoom={12}
               gestureHandling={"greedy"}
-              disableDefaultUI={true}>
+              disableDefaultUI={true}
+            >
               <Marker position={{ lat: location.lat, lng: location.lng }} />
             </Map>
           </APIProvider>
