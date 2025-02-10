@@ -19,16 +19,16 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Sakhi",
   description: "Tech-Powered Security & Empowerment",
-  manifest :"/manifest.json",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-full`}>
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-full`}
+      >
         <div className=" hidden md:flex z-10 fixed justify-start   p-2 pt-0 rounded-b-lg items-center ml-20">
-
           <Image
             className=""
             src={logo}
@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
         <div className="h-full w-full flex flex-row">
           <Navbar />
           <div className="flex-1 md:m-6">{children}</div>
-          <Toaster />
+          <Toaster position="top-right" />
           <LegalGuide />
         </div>
       </body>
