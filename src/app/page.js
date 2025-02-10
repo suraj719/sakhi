@@ -243,7 +243,7 @@ export function AppleCardsCarouselDemo() {
 
 export default function Home() {
   return (
-    <div className="relative mt-9 md:mt-0 min-h-screen w-full portrait:max-w-[95vw] bg-background">
+    <div className="relative  md:mt-0 min-h-screen w-full portrait:max-w-[95vw] bg-background">
       <section className="relative min-h-screen portrait:min-h-[60vh] flex flex-wrap items-center justify-start pb-24">
         <AnimatedGridPattern
           numSquares={50}
@@ -252,7 +252,7 @@ export default function Home() {
           repeatDelay={1}
         />
 
-        <div className="container mx-auto px-4 relative z-10 text-center">
+        <div className="container mt-16 md:mt-0  mx-auto px-4 relative z-10 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold text-black dark:text-white">
             Sakhi : True independence starts with safety
           </h1>
