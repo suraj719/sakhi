@@ -56,7 +56,7 @@ function Navbar() {
               </Link>
             </div>
             <div className="w-full flex-1 text-center md:text-left p-2 flex items-center md:flex-row md:gap-4">
-              <Link href="/navigate">
+              <Link href="/home">
                 <FaMapMarkerAlt
                   className={`mx-auto  ${
                     pathname === "/navigate"
