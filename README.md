@@ -1,3 +1,7 @@
+Test account:
+username: test1
+password: 123456
+
 # Women Safety App: Tech-Powered Security & Empowerment
 
 The Women Safety App is an innovative solution designed to enhance security and empower women through modern technology. With a user-centric approach, the app offers proactive and reactive safety measures to ensure confidence and independence in public and private spaces.
