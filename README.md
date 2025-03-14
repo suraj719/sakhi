@@ -1,10 +1,15 @@
-Test account:
-username: test1
-password: 123456
 
-# Women Safety App: Tech-Powered Security & Empowerment
+# Sakhi: Women Safety & Emergency Assistance App
 
 The Women Safety App is an innovative solution designed to enhance security and empower women through modern technology. With a user-centric approach, the app offers proactive and reactive safety measures to ensure confidence and independence in public and private spaces.
+
+🌐 Explore the Platform:
+- 🔗 Access the app: [sakhi7.vercel.app](https://sakhi7.vercel.app/)
+- 🎥 Watch the demo: [Youtube](https://youtu.be/aXG4o5z09I8)
+
+🧑‍💻Testing account: 
+- username: test1
+- password: 123456
 
 ## ✨ Platform Features
 
@@ -61,10 +66,10 @@ The Women Safety App aligns with key SDGs to drive positive change:
 * Enhances access to justice through legal aid chatbots and strengthens mechanisms to report and address crimes effectively.
 
 ## 💻 Technical Stack
-* **Frontend:** React with Tailwind CSS and shadcn/ui
-* **Backend:** Node.js with custom authentication
-* **Storage:** MongoDB
-* **APIs & Services:** Geolocation, AI-powered chatbot, and real-time alert systems
+* **Frontend:** Next.js with Tailwind CSS and shadcn/ui
+* **Backend:** Next.js server actions
+* **Storage:** MongoDB, Firebase
+* **APIs & Services:** Google maps, twillio, Gemini
 
 ## 🚀 Future Enhancements
 * **AI-based Threat Prediction**: Uses machine learning to analyze patterns and predict potential threats.
