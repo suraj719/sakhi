@@ -87,7 +87,7 @@ const SOSButton = () => {
             if (res.success) {
               toast.success("SOS video segment uploaded successfully!");
             } else {
-              toast.error(res.error);
+              // toast.error(res.error);
             }
           }
         );
@@ -147,7 +147,7 @@ const SOSButton = () => {
         toast.error(res.error);
       }
     } catch (err) {
-      toast.error("Failed to fetch user details");
+      // toast.error("Failed to fetch user details");
     }
   }
 
