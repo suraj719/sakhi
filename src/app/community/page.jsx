@@ -32,14 +32,18 @@ import { getUser } from "../../../actions/userActions";
 import { useRouter } from "next/navigation";
 
 const CommunityCard = ({ community, onJoin, onLeave, currentUser }) => {
-  const isMember = community.members?.includes(currentUser?._id);
+  const isMember = community.members.some(
+    (tuser) => tuser._id === currentUser?._id
+  );
+  const isAdmin = community.admin._id === currentUser?._id;
+  const isPartOfCommunity = isMember || isAdmin;
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 border-black hover:border-black">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="text-xl font-bold text-black">{community.name}</span>
-          {!isMember && (
+          {currentUser && !isPartOfCommunity && (
             <Button
               variant="outline"
               size="sm"
@@ -52,7 +56,7 @@ const CommunityCard = ({ community, onJoin, onLeave, currentUser }) => {
               Join
             </Button>
           )}
-          {currentUser && isMember && showJoinButton && (
+          {currentUser && isMember && !isAdmin && (
             <Button
               variant="outline"
               size="sm"
@@ -64,6 +68,11 @@ const CommunityCard = ({ community, onJoin, onLeave, currentUser }) => {
             >
               Leave
             </Button>
+          )}
+          {isAdmin && (
+            <span className="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded">
+              Admin
+            </span>
           )}
         </CardTitle>
         <CardDescription className="text-black/60">
@@ -183,10 +192,19 @@ export default function CommunityPage() {
     );
   }
 
+  // Filter communities based on the active tab
   const filteredCommunities =
     activeTab === "explore"
       ? communities
-      : communities.filter((c) => c.members?.includes(user?._id));
+      : communities.filter(
+          (c) =>
+            c.members?.some((tuser) => tuser._id === user?._id) ||
+            c.admin._id === user?._id
+        );
+
+  // For debugging - log the user and communities to see their structure
+  console.log("Current User:", user);
+  console.log("Communities:", communities);
 
   return (
     <div className="min-h-screen bg-white py-12 px-4">
@@ -265,7 +283,6 @@ export default function CommunityPage() {
                       onJoin={handleJoinCommunity}
                       onLeave={handleLeaveCommunity}
                       currentUser={user}
-                      showJoinButton={activeTab === "explore"}
                     />
                   </motion.div>
                 </Link>
