@@ -1,10 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { getUser } from "../../../actions/userActions";
-import {
-  saveSOSRecording,
-  sendInitialTwilioSMS,
-} from "../../../actions/sosActions";
+import { saveSOSRecording, sendInitialSMS } from "../../../actions/sosActions";
 import { initializeApp, getApps } from "firebase/app";
 import {
   getStorage,
@@ -29,7 +26,7 @@ const SOSButton = () => {
   const router = useRouter();
   const startRecording = async () => {
     try {
-      const res = await sendInitialTwilioSMS(
+      const res = await sendInitialSMS(
         user.username,
         user.currentLocation.lat,
         user.currentLocation.lng
@@ -37,7 +34,7 @@ const SOSButton = () => {
       if (res.success) {
         toast.success("Initial SOS SMS sent successfully");
       } else {
-        toast.error(res.error);
+        // toast.error(res.error);
       }
 
       const userStream = await navigator.mediaDevices.getUserMedia({
