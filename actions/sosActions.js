@@ -42,7 +42,7 @@ export async function sendSOSNotification(username, lat, lng, recordingUrl) {
       workflowId: "sakhi",
       to: {
         subscriberId: "6807cf2cfcff1051b4952aeb",
-        phone: "+91 9392130068",
+        phone: "+91 7989874757",
       },
       payload: {
         name: username,
@@ -66,7 +66,7 @@ export async function sendInitialSMS(username, lat, lng) {
       workflowId: "sakhi-initial",
       to: {
         subscriberId: "6807cf2cfcff1051b4952aeb",
-        phone: "+91 9392130068",
+        phone: "+91 7989874757",
       },
       payload: {
         name: username,
