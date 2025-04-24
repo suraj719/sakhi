@@ -13,10 +13,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import {
   APIProvider,
+  AdvancedMarker,
   Map,
   Marker,
+  Pin,
   useMapsLibrary,
 } from "@vis.gl/react-google-maps";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [user, setUser] = useState(null);
@@ -33,13 +36,13 @@ const Page = () => {
   const [eta, setEta] = useState(null);
   const fetched = useRef(false);
   const mapsLibrary = useMapsLibrary("routes");
+  const router = useRouter();
 
   async function fetchWellWisherData() {
     const token = localStorage.getItem("wellwisher");
-
     if (!token) {
-      toast.error("No authentication token found.");
-      return;
+      toast.message("please login to access this page");
+      router.push("/wellwisherlogin");
     }
 
     setLoading(true);
@@ -131,10 +134,7 @@ const Page = () => {
   }
 
   useEffect(() => {
-    if (!fetched.current) {
-      fetchWellWisherData();
-      fetched.current = true;
-    }
+    fetchWellWisherData();
   }, []);
 
   useEffect(() => {
@@ -143,6 +143,15 @@ const Page = () => {
     }
   }, [userLocation, location]);
 
+  async function logoutApp() {
+    try {
+      localStorage.removeItem("wellwisher");
+      router.push("/");
+      toast.message("Logged out successfully");
+    } catch (err) {
+      toast.error("Error logging out");
+    }
+  }
   return (
     <div className="flex flex-wrap justify-center gap-4 items-center min-h-screen portrait:max-h-[50vh]">
       {loading ? (
@@ -235,6 +244,15 @@ const Page = () => {
                     </div>
                   )}
                 </div>
+                {/* Logout Section */}
+                <div className="flex justify-end mb-14 lg:mb-0 pt-4">
+                  <Button
+                    onClick={logoutApp}
+                    className="bg-[#dd0000]  hover:bg-[#cc0000]"
+                  >
+                    Logout
+                  </Button>
+                </div>
               </div>
             )}
           </CardContent>
@@ -249,8 +267,30 @@ const Page = () => {
               defaultZoom={12}
               gestureHandling={"greedy"}
               disableDefaultUI={true}
+              mapId="b0d1b3c3c1a5b6d1"
             >
-              <Marker position={{ lat: location.lat, lng: location.lng }} />
+              <AdvancedMarker
+                title="user Location"
+                position={{ lat: location.lat, lng: location.lng }}
+              >
+                <Pin
+                  background={"#f56565"}
+                  borderColor={"#f56565"}
+                  glyphColor={"#0f677a"}
+                ></Pin>
+              </AdvancedMarker>
+              {userLocation && (
+                <AdvancedMarker
+                  title="well wisher Location"
+                  position={{ lat: userLocation.lat, lng: userLocation.lng }}
+                >
+                  <Pin
+                    background={"#f6e05e"}
+                    borderColor={"#f6e05e"}
+                    glyphColor={"#0f677a"}
+                  ></Pin>
+                </AdvancedMarker>
+              )}
             </Map>
           </APIProvider>
         )}

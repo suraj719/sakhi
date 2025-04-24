@@ -18,12 +18,7 @@ export async function saveSOSRecording(token, recordingUrl) {
     user.sosrecording.push({ recordingUrl });
     await user.save();
 
-    const result = await sendSOSNotification(
-      user.username,
-      user.currentLocation.lat,
-      user.currentLocation.lng,
-      recordingUrl
-    );
+    const result = await sendSOSNotification(user, recordingUrl);
 
     return result;
   } catch (error) {
@@ -36,42 +31,62 @@ const novu = new Novu({
   secretKey: process.env.NEXT_PUBLIC_NOVU_SECRET_KEY,
 });
 
-export async function sendSOSNotification(username, lat, lng, recordingUrl) {
-  try {
-    const response = await novu.trigger({
-      workflowId: "sakhi",
-      to: {
-        subscriberId: "6807cf2cfcff1051b4952aeb",
-        phone: "+91 9392130068",
-      },
-      payload: {
-        name: username,
-        location: `https://maps.google.com/?q=${lat},${lng}`,
-        recording: recordingUrl || "",
-      },
-    });
+export async function sendSOSNotification(user, recordingUrl) {
+  const { username, currentLocation, wellwishers = [] } = user;
 
-    return { success: true, response };
-  } catch (err) {
-    return {
-      success: false,
-      error: err.message,
-    };
+  for (const wellwisher of wellwishers) {
+    if (
+      wellwisher.phoneNo &&
+      /^\+\d{1,4}\s\d{6,15}$/.test(wellwisher.phoneNo)
+    ) {
+      const payload = {
+        name: username,
+        location: `https://maps.google.com/?q=${currentLocation.lat},${currentLocation.lng}`,
+        recording: recordingUrl || "",
+      };
+      await sendMessage(
+        user._id.toString() + wellwisher.nickname,
+        wellwisher.phoneNo,
+        payload
+      );
+    }
   }
+
+  return { success: true };
 }
 
-export async function sendInitialSMS(username, lat, lng) {
+export async function sendInitialSMS(user) {
+  const { username, currentLocation, wellwishers = [] } = user;
+  for (const wellwisher of wellwishers) {
+    if (
+      wellwisher.phoneNo &&
+      /^\+\d{1,4}\s\d{6,15}$/.test(wellwisher.phoneNo)
+    ) {
+      const payload = {
+        name: username,
+        location: `https://maps.google.com/?q=${currentLocation.lat},${currentLocation.lng}`,
+      };
+      await sendMessage(
+        user._id.toString() + wellwisher.nickname,
+        wellwisher.phoneNo,
+        payload
+      );
+    }
+  }
+
+  return { success: true };
+}
+
+export async function sendMessage(subscriberId, phone, payload) {
   try {
     const response = novu.trigger({
-      workflowId: "sakhi-initial",
+      workflowId: payload.recording ? "sakhi" : "sakhi-initial",
       to: {
-        subscriberId: "6807cf2cfcff1051b4952aeb",
-        phone: "+91 9392130068",
+        subscriberId,
+        // email:user.email,
+        phone,
       },
-      payload: {
-        name: username,
-        location: `https://maps.google.com/?q=${lat},${lng}`,
-      },
+      payload,
     });
     return { success: true, response };
   } catch (err) {

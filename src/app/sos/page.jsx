@@ -26,11 +26,7 @@ const SOSButton = () => {
   const router = useRouter();
   const startRecording = async () => {
     try {
-      const res = await sendInitialSMS(
-        user.username,
-        user.currentLocation.lat,
-        user.currentLocation.lng
-      );
+      const res = await sendInitialSMS(user);
       if (res.success) {
         toast.success("Initial SOS SMS sent successfully");
       } else {
@@ -69,10 +65,10 @@ const SOSButton = () => {
           (snapshot) => {
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            toast.info(`Uploading segment: ${progress.toFixed(2)}%`);
+            toast.info(`Uploading video: ${progress.toFixed(2)}%`);
           },
           (error) => {
-            toast.error("Error uploading video segment: " + error.message);
+            toast.error("Error uploading video: " + error.message);
           },
           async () => {
             const videoUrl = await getDownloadURL(storageRef);
@@ -82,7 +78,7 @@ const SOSButton = () => {
             );
 
             if (res.success) {
-              toast.success("SOS video segment uploaded successfully!");
+              toast.success("SOS video saved successfully!");
             } else {
               // toast.error(res.error);
             }
