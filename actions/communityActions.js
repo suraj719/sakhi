@@ -35,7 +35,10 @@ export async function getCommunities() {
         : [],
     }));
 
-    return { success: true, communities: formattedCommunities };
+    return {
+      success: true,
+      communities: JSON.parse(JSON.stringify(formattedCommunities)),
+    };
   } catch (err) {
     return { success: false, error: err.message };
   }
@@ -70,14 +73,16 @@ export async function createCommunity(communityData, token) {
     return {
       success: true,
       message: "Community created successfully!",
-      community: {
-        ...community.toObject(),
-        _id: community._id.toString(),
-        admin: {
-          _id: user._id.toString(),
-          username: user.username,
-        },
-      },
+      community: JSON.parse(
+        JSON.stringify({
+          ...community.toObject(),
+          _id: community._id.toString(),
+          admin: {
+            _id: user._id.toString(),
+            username: user.username,
+          },
+        }),
+      ),
     };
   } catch (err) {
     return { success: false, error: err.message };
@@ -153,7 +158,7 @@ export async function checkMember(communityId, token) {
 
     // Check if user is a member
     const isMember = community.members.some(
-      (memberId) => memberId.toString() === userId.toString()
+      (memberId) => memberId.toString() === userId.toString(),
     );
 
     if (isMember) {
@@ -218,7 +223,7 @@ export async function leaveCommunity(communityId, token) {
     }
 
     community.members = community.members.filter(
-      (memberId) => memberId.toString() !== userIdStr
+      (memberId) => memberId.toString() !== userIdStr,
     );
     await community.save();
 

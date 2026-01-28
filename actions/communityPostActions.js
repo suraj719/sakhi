@@ -25,7 +25,7 @@ export async function getAllPosts(communityId) {
       .sort({ createdAt: -1 }); // Corrected sorting
 
     if (!communityPosts || communityPosts.length === 0) {
-      throw new Error("No posts found for this community");
+      return { success: true, posts: [] };
     }
 
     const transformedPosts = communityPosts.map((post) => ({
@@ -48,7 +48,10 @@ export async function getAllPosts(communityId) {
       createdAt: post.createdAt,
     }));
 
-    return { success: true, posts: transformedPosts };
+    return {
+      success: true,
+      posts: JSON.parse(JSON.stringify(transformedPosts)),
+    };
   } catch (err) {
     console.error("Error in getAllPosts:", err);
     return { success: false, error: err.message };
@@ -93,17 +96,19 @@ export async function createPost(communityId, postData, token) {
     return {
       success: true,
       message: "Post created successfully!",
-      post: {
-        _id: post._id.toString(),
-        title: post.title,
-        content: post.content,
-        author: {
-          _id: user._id.toString(),
-          username: user.username,
-        },
-        comments: [],
-        createdAt: post.createdAt,
-      },
+      post: JSON.parse(
+        JSON.stringify({
+          _id: post._id.toString(),
+          title: post.title,
+          content: post.content,
+          author: {
+            _id: user._id.toString(),
+            username: user.username,
+          },
+          comments: [],
+          createdAt: post.createdAt,
+        }),
+      ),
     };
   } catch (err) {
     console.error("Error in createPost:", err);

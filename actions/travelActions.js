@@ -58,7 +58,10 @@ export async function getTravels() {
       })),
     }));
 
-    return { success: true, travels: formattedTravels };
+    return {
+      success: true,
+      travels: JSON.parse(JSON.stringify(formattedTravels)),
+    };
   } catch (err) {
     return { success: false, error: err.message };
   }
@@ -90,12 +93,12 @@ export async function acceptApplication(travelId, applicationId) {
     await dbConnect();
 
     const travel = await Travel.findById(travelId).populate(
-      "applications.applicant"
+      "applications.applicant",
     );
     if (!travel) throw new Error("Travel not found");
 
     const application = travel.applications.find(
-      (app) => app._id.toString() === applicationId
+      (app) => app._id.toString() === applicationId,
     );
     if (!application) throw new Error("Application not found");
 
@@ -128,7 +131,7 @@ export async function rejectApplication(travelId, applicationId) {
     if (!travel) throw new Error("Travel not found");
 
     const application = travel.applications.find(
-      (app) => app._id.toString() === applicationId
+      (app) => app._id.toString() === applicationId,
     );
     if (!application) throw new Error("Application not found");
 

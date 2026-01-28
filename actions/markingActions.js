@@ -8,7 +8,7 @@ export async function getMarkings() {
   await dbConnect();
   try {
     const markings = await Markings.find({});
-    return { success: true, data: markings };
+    return { success: true, data: JSON.parse(JSON.stringify(markings)) };
   } catch (error) {
     return { success: false, error: "Failed to fetch markings" };
   }
@@ -25,7 +25,7 @@ export async function createMarking({ comment, markType, location, userId }) {
       markedBy: userId,
     });
     await newMarking.save();
-    return { success: true, data: newMarking };
+    return { success: true, data: JSON.parse(JSON.stringify(newMarking)) };
   } catch (error) {
     return { success: false, error: "Failed to create marking" };
   }

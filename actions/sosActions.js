@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user";
 import { Novu } from "@novu/api";
 
-export async function saveSOSRecording(token, recordingUrl) {
+export async function saveSOSRecording(token, recordingUrl, location) {
   try {
     await dbConnect();
     const decoded = jwt.decode(token);
@@ -15,7 +15,11 @@ export async function saveSOSRecording(token, recordingUrl) {
       return { success: false, error: "User not found" };
     }
 
-    user.sosrecording.push({ recordingUrl });
+    user.sosrecording.push({
+      recordingUrl,
+      createdAt: new Date(),
+      location: location || { lat: 0, lng: 0 },
+    });
     await user.save();
 
     const result = await sendSOSNotification(user, recordingUrl);
@@ -47,7 +51,7 @@ export async function sendSOSNotification(user, recordingUrl) {
       await sendMessage(
         user._id.toString() + wellwisher.nickname,
         wellwisher.phoneNo,
-        payload
+        payload,
       );
     }
   }
@@ -69,7 +73,7 @@ export async function sendInitialSMS(user) {
       await sendMessage(
         user._id.toString() + wellwisher.nickname,
         wellwisher.phoneNo,
-        payload
+        payload,
       );
     }
   }

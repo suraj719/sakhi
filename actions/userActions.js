@@ -51,7 +51,7 @@ export async function addUser({ username, password, email, phoneNo }) {
     const token = jwt.sign(
       { user: user._id.toString() },
       process.env.NEXT_PUBLIC_JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     return {
@@ -92,7 +92,7 @@ export async function loginUser({ type, slug, password }) {
     const token = jwt.sign(
       { user: user._id.toString() },
       process.env.NEXT_PUBLIC_JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     return {
@@ -127,10 +127,7 @@ export async function getUser(token) {
 
     return {
       success: true,
-      user: {
-        ...user,
-        _id: user._id.toString(),
-      },
+      user: JSON.parse(JSON.stringify(user)),
     };
   } catch (err) {
     return { success: false, error: err.message };
@@ -160,14 +157,14 @@ export async function loginWellWisher(username, passcode, nickname) {
     if (!user) return { success: false, error: "User not found" };
 
     const wellWisher = user.wellwishers.find(
-      (w) => w.passcode === passcode && w.nickname === nickname
+      (w) => w.passcode === passcode && w.nickname === nickname,
     );
     if (!wellWisher) return { success: false, error: "Invalid credentials" };
 
     const token = jwt.sign(
       { username: user.username, nickname },
       process.env.NEXT_PUBLIC_JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     return { success: true, token };
@@ -195,7 +192,7 @@ export async function getWellWisherData(token) {
     if (!user) return { success: false, error: "User not found" };
 
     const wellWisher = user.wellwishers?.find(
-      (w) => w.nickname === decoded.nickname
+      (w) => w.nickname === decoded.nickname,
     );
     if (!wellWisher) return { success: false, error: "Wellwisher not found" };
 
@@ -203,6 +200,7 @@ export async function getWellWisherData(token) {
       success: true,
       username: user.username,
       wellWisher: JSON.parse(JSON.stringify(wellWisher)),
+      sosRecordings: JSON.parse(JSON.stringify(user.sosrecording || [])),
     };
   } catch (error) {
     return { success: false, error: error.message };
@@ -217,7 +215,7 @@ export async function updateEmailWellWisher(email, passcode, user) {
 
     if (!curruser) return { success: false, error: "User not found" };
     const wellWisher = curruser.wellwishers.find(
-      (w) => w.passcode === passcode
+      (w) => w.passcode === passcode,
     );
     console.log(wellWisher);
     if (!wellWisher) return { success: false, error: "Invalid credentials" };
@@ -238,7 +236,7 @@ export async function updatePhnoWellWisher(phoneNo, passcode, user) {
 
     if (!curruser) return { success: false, error: "User not found" };
     const wellWisher = curruser.wellwishers.find(
-      (w) => w.passcode === passcode
+      (w) => w.passcode === passcode,
     );
     if (!wellWisher) return { success: false, error: "Invalid credentials" };
     wellWisher.phoneNo = phoneNo;

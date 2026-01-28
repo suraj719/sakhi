@@ -33,10 +33,7 @@ function CommunityPage() {
         const validate = await checkMember(communityId, token);
 
         if (validate.success) {
-          toast.success("Welcome to the community");
           setIsMember(true);
-        } else {
-          toast.info("You are not a member of this community");
         }
       } else {
         toast.error(response.error);

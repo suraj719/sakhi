@@ -54,9 +54,8 @@ const SOSButton = () => {
         const videoBlob = new Blob(chunks, { type: "video/mp4" });
         const videoFile = new File([videoBlob], `sos_${Date.now()}.webm`);
 
-        const filePath = `sos_videos/${
-          user?.username
-        }_${Date.now()}_sos_part.mp4`;
+        const filePath = `sos_videos/${user?.username
+          }_${Date.now()}_sos_part.mp4`;
         const storageRef = ref(storage, filePath);
         const uploadTask = uploadBytesResumable(storageRef, videoFile);
 
@@ -72,16 +71,38 @@ const SOSButton = () => {
           },
           async () => {
             const videoUrl = await getDownloadURL(storageRef);
-            const res = await saveSOSRecording(
-              localStorage.getItem("token"),
-              videoUrl
-            );
+            navigator.geolocation.getCurrentPosition(
+              async (position) => {
+                const location = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
+                const res = await saveSOSRecording(
+                  localStorage.getItem("token"),
+                  videoUrl,
+                  location
+                );
 
-            if (res.success) {
-              toast.success("SOS video saved successfully!");
-            } else {
-              // toast.error(res.error);
-            }
+                if (res.success) {
+                  toast.success("SOS video saved successfully!");
+                } else {
+                  // toast.error(res.error);
+                }
+              },
+              (error) => {
+                console.error("Error getting location:", error);
+                // Save without location if geolocation fails
+                saveSOSRecording(
+                  localStorage.getItem("token"),
+                  videoUrl,
+                  { lat: 0, lng: 0 }
+                ).then((res) => {
+                  if (res.success) {
+                    toast.success("SOS video saved successfully!");
+                  }
+                });
+              }
+            );
           }
         );
 

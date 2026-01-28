@@ -127,11 +127,10 @@ const ChatRooms = () => {
         <button
           key={room.roomId}
           onClick={() => onClick(room.roomId)}
-          className={`w-full p-3 flex items-center justify-between rounded-lg transition-all duration-200 hover:bg-accent group ${
-            selectedRoom === room.roomId
-              ? "bg-primary/5 hover:bg-primary/10"
-              : ""
-          }`}
+          className={`w-full p-3 flex items-center justify-between rounded-lg transition-all duration-200 hover:bg-accent group ${selectedRoom === room.roomId
+            ? "bg-primary/5 hover:bg-primary/10"
+            : ""
+            }`}
         >
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9">
@@ -226,8 +225,8 @@ const ChatRooms = () => {
                 {roomDetails && (
                   <TooltipProvider>
                     <div className="hidden sm:flex gap-3 flex-wrap">
-                      {roomDetails.participants.map((participant) => (
-                        <Tooltip key={participant.userId}>
+                      {roomDetails.participants.map((participant, index) => (
+                        <Tooltip key={`${participant.id}-${index}`}>
                           <TooltipTrigger>
                             <Avatar className="border-2 border-background h-8 w-8">
                               <AvatarImage
@@ -260,14 +259,12 @@ const ChatRooms = () => {
                 {messages.map((msg, index) => (
                   <div
                     key={index}
-                    className={`flex ${
-                      msg.sender === user?._id ? "justify-end" : "justify-start"
-                    }`}
+                    className={`flex ${msg.sender === user?._id ? "justify-end" : "justify-start"
+                      }`}
                   >
                     <div
-                      className={`flex gap-2 max-w-[85%] sm:max-w-[70%] ${
-                        msg.sender === user?._id ? "flex-row-reverse" : ""
-                      }`}
+                      className={`flex gap-2 max-w-[85%] sm:max-w-[70%] ${msg.sender === user?._id ? "flex-row-reverse" : ""
+                        }`}
                     >
                       <Avatar className="h-8 w-8">
                         <AvatarImage
@@ -279,19 +276,17 @@ const ChatRooms = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div
-                        className={`space-y-1 ${
-                          msg.sender === user?._id ? "items-end" : "items-start"
-                        }`}
+                        className={`space-y-1 ${msg.sender === user?._id ? "items-end" : "items-start"
+                          }`}
                       >
                         <p className="text-xs text-muted-foreground">
                           {msg.username}
                         </p>
                         <div
-                          className={`rounded-lg p-3 ${
-                            msg.sender === user?._id
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted"
-                          }`}
+                          className={`rounded-lg p-3 ${msg.sender === user?._id
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted"
+                            }`}
                         >
                           <p className="text-sm break-words">{msg.message}</p>
                         </div>
