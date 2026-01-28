@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { firebaseConfig } from "../../../utils/firebase";
 import { useRouter } from "next/navigation";
 
+export const dynamic = 'force-dynamic';
+
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
