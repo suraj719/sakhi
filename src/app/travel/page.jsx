@@ -210,7 +210,7 @@ export default function Page() {
               View Applications
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
             {selectedTravel?.applications.map(
               (application) =>
                 application.status !== "rejected" && (

@@ -27,6 +27,22 @@ const markingSchema = new mongoose.Schema({
       required: true,
     },
   },
+  status: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
+  aiSummary: {
+    type: String,
+    default: "",
+  },
+  verifiedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  verifiedAt: {
+    type: Date,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

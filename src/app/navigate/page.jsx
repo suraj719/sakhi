@@ -13,7 +13,7 @@ import {
   Pin,
 } from "@vis.gl/react-google-maps";
 import { getUser, updateLocationUser } from "../../../actions/userActions";
-import { getMarkings, createMarking } from "../../../actions/markingActions";
+import { getApprovedMarkings, createMarking } from "../../../actions/markingActions";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button"; // Shadcn Button
 import {
@@ -48,7 +48,7 @@ export default function MapWithSearch() {
   }, []);
 
   const fetchMarkings = useCallback(async () => {
-    const response = await getMarkings();
+    const response = await getApprovedMarkings();
     if (response.success) {
       setMarkings(response.data);
     } else {
